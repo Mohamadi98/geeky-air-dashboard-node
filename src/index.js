@@ -2,7 +2,6 @@ const express = require('express')
 const dotenv = require('dotenv')
 const bodyParser = require('body-parser')
 const adminRouter = require('./controllers/adminController')
-const db_client = require('../src/db_config')
 
 
 dotenv.config();

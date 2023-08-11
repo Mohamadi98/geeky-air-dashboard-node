@@ -1,6 +1,7 @@
 const { DataTypes } = require('sequelize');
-const db_client = require('../db_config'); 
+const connect_db = require('../db_config'); 
 
+const db_client = connect_db();
 const admin_agent = db_client.define('admin', {
     id: {
     type: DataTypes.INTEGER,
