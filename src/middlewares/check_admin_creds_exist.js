@@ -1,39 +1,20 @@
-const admin_agent = require('../models/adminModel')
+const adminServices = require('../services/adminServices')
 
 const check_exist = async (req, res, next) => {
     const email = req.body.email;
-    const username = req.body.username;
     try {
-        const result = await admin_agent.findOne({
-            where: {
-              email: email,
-            },
-          });
+        const result = await adminServices.fetch_one_with_email(email);
         
-          if(result) {
-            res.status(400).json({
+          if (result) {
+            return res.status(400).json({
                 'message': 'there is an admin with this email already'
             });
           }
-
-          else {
-            const result = await admin_agent.findOne({
-                where: {
-                  username: username,
-                },
-              });
-
-              if (result) {
-                res.status(400).json({
-                    'message': 'there is an admin with this username already'
-                });
-              }
-
-              else {
-                next();
-              }
+          
+          next();
+              
           }
-    } catch (error) {
+     catch (error) {
         res.status(500).json({
             'message': `there was an error: ${error}`
         })
@@ -41,4 +22,6 @@ const check_exist = async (req, res, next) => {
 
 }
 
-module.exports = check_exist;
+module.exports = {
+  check_exist: check_exist
+}
