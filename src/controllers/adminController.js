@@ -32,6 +32,16 @@ const add_admin = async (req, res) => {
      }
 }
 
+const get_all_admins = async (req, res) => {
+     try {
+          const result = await adminServices.fetch_all();
+          res.status(200).json(result);
+     } catch (error) {
+          return `error fetching admins: ${error}`
+     }
+}
+
 adminRouter.post('/add-admin', adminMiddlewares.check_exist, add_admin);
+adminRouter.get('/get-all-admins', get_all_admins)
 
 module.exports = adminRouter
