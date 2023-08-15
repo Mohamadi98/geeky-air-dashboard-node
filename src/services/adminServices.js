@@ -26,12 +26,13 @@ const fetch_one_with_email = async (value) => {
     }
 }
 
-const fetch_all_with_email = async (key, value) => {
+const fetch_all = async () => {
     try {
         const result = await admin_agent.findAll({
             where: {
-              email: value,
+              role: 'admin',
             },
+            attributes: ['id', 'username', 'email', 'active', 'role']
           });
           return result;
     } catch (error) {
@@ -66,6 +67,6 @@ const super_admin_initialize = async () => {
 module.exports = {
     create: create,
     super_admin_initialize: super_admin_initialize,
-    fetch_all_with_email: fetch_all_with_email,
+    fetch_all: fetch_all,
     fetch_one_with_email: fetch_one_with_email
 }
