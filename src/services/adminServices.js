@@ -32,7 +32,7 @@ const fetch_all = async () => {
             where: {
               role: 'admin',
             },
-            attributes: ['id', 'username', 'email', 'active', 'role']
+            attributes: ['id', 'username', 'email', 'active', 'role', 'profile_image']
           });
           return result;
     } catch (error) {
