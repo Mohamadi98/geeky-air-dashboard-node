@@ -10,7 +10,12 @@ dotenv.config();
 const adminRouter = express.Router();
 
 const add_admin = async (req, res) => {
-     const { username, email, password, active, profile_image } = req.body;
+     const { username, email, password, active } = req.body;
+     let profile_image = req.body.profile_image;
+     console.log(profile_image);
+     if (profile_image === "") {
+          profile_image = 'https://www.drivetest.de/wp-content/uploads/2019/08/drivetest-avatar-m.png'
+     }
      const hashed_password = await hash_functions.hash_password(password)
      const data = {
           username: username,
