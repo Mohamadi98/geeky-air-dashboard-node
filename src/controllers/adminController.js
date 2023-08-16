@@ -52,6 +52,12 @@ const admin_login = async (req, res) => {
      const result = await adminServices.fetch_one_with_email(email);
      if (result) {
           const admin_password = result['password'];
+          const check_admin_active = result['active'];
+          if (check_admin_active === false) {
+               return res.status(400).json({
+                    'message': 'inactive admin'
+               });
+          }
           const verify_password = await hash_functions.verify_hash(password, admin_password);
           if (verify_password) {
                const token = await tokenServices.generate_token(result['id'], email);
