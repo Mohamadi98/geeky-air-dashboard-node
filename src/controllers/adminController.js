@@ -48,7 +48,18 @@ const add_admin = async (req, res) => {
 
 const get_all_admins = async (req, res) => {
      try {
-          const result = await adminServices.fetch_all();
+          let result = await adminServices.fetch_all();
+
+          for (let i = 0; i < result.length; i++) {
+               if (result[i]['active'] === true) {
+                    result[i]['active'] = 'active';
+               }
+     
+               else {
+                    result[i]['active'] = 'inactive';
+               }
+          }
+
           res.status(200).json(result);
      } catch (error) {
           return `error fetching admins: ${error}`
