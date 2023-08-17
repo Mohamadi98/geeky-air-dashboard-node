@@ -12,7 +12,13 @@ const adminRouter = express.Router();
 const add_admin = async (req, res) => {
      const { username, email, password, active } = req.body;
      let profile_image = req.body.profile_image;
-     console.log(profile_image);
+     if (active === 'active') {
+          active = true;
+     }
+     else {
+          active = false;
+     }
+     
      if (profile_image === "") {
           profile_image = 'https://www.drivetest.de/wp-content/uploads/2019/08/drivetest-avatar-m.png'
      }
