@@ -22,7 +22,7 @@ const add_admin = async (req, res) => {
      }
 
      if (profile_image === "") {
-          profile_image = 'https://www.drivetest.de/wp-content/uploads/2019/08/drivetest-avatar-m.png'
+          profile_image = 'https://www.pngkit.com/png/detail/853-8533526_testpersion1-avatar-for-profile.png'
      }
      const hashed_password = await hash_functions.hash_password(password)
      const data = {
