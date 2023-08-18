@@ -26,6 +26,20 @@ const fetch_one_with_email = async (value) => {
     }
 }
 
+const fetch_one_with_id = async (value) => {
+    try {
+        const result = await admin_agent.findOne({
+            where: {
+              id: value,
+            },
+            attributes: ['username', 'email', 'active', 'role', 'profile_image']
+          });
+          return result;
+    } catch (error) {
+        return `there was an error fetching from database ${error}`
+    }
+}
+
 const fetch_all = async () => {
     try {
         const result = await admin_agent.findAll({
@@ -68,5 +82,6 @@ module.exports = {
     create: create,
     super_admin_initialize: super_admin_initialize,
     fetch_all: fetch_all,
-    fetch_one_with_email: fetch_one_with_email
+    fetch_one_with_email: fetch_one_with_email,
+    fetch_one_with_id: fetch_one_with_id
 }
