@@ -2,6 +2,7 @@ const express = require('express')
 const dotenv = require('dotenv')
 const adminServices = require('../services/adminServices')
 const adminMiddlewares = require('../middlewares/check_admin_creds_exist')
+const check_super_admin = require('../middlewares/check_if_superadmin')
 const hash_functions = require('../services/hashingServices')
 const tokenServices = require('../services/tokenServices')
 
@@ -71,11 +72,6 @@ const get_admin = async (req, res) => {
           const { id } = req.params;
           const result = await adminServices.fetch_one_with_id(id);
           if (result) {
-               if (result['role'] === 'superadmin') {
-                    return res.status(400).json({
-                         'message': 'No admin associated with this id'
-                    });
-               }
                res.status(200).json(result);
           }
           else {
@@ -85,6 +81,38 @@ const get_admin = async (req, res) => {
           }
      } catch (error) {
           return `there was an error fetching the data: ${error}`
+     }
+}
+
+const edit_admin = async (req, res) => {
+     try {
+          const {id} = req.params
+          const { username, email } = req.body;
+          let profile_image = req.body.profile_image;
+          if (profile_image === "") {
+               profile_image = 'https://www.pngkit.com/png/detail/853-8533526_testpersion1-avatar-for-profile.png';
+          }
+          let active = req.body.active;
+          if (active === 'active') {
+               active = true;
+          }
+          else {
+               active = false;
+          }
+          const result = adminServices.update_admin_with_id(id, username, email, active, profile_image)
+          if (result[0] === 1) {
+               res.status(200).json({
+                    'message': 'admin updated successfuly!'
+               });
+          }
+          else {
+               res.status(400).json({
+                    'message': 'No admin associated with this id'
+               });
+          }
+
+     } catch (error) {
+          return `there was an error editing the data: ${error}`
      }
 }
 
@@ -131,6 +159,7 @@ const admin_login = async (req, res) => {
 adminRouter.post('/add-admin', adminMiddlewares.check_exist, add_admin);
 adminRouter.get('/get-all-admins', get_all_admins)
 adminRouter.post('/admin-login', admin_login)
-adminRouter.get('/get-admin/:id', get_admin)
+adminRouter.get('/get-admin/:id', check_super_admin.check_super_admin, get_admin)
+adminRouter.post('/edit-admin/:id', check_super_admin.check_super_admin, edit_admin)
 
 module.exports = adminRouter
