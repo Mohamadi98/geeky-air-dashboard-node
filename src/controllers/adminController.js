@@ -72,7 +72,23 @@ const get_admin = async (req, res) => {
           const { id } = req.params;
           const result = await adminServices.fetch_one_with_id(id);
           if (result) {
-               res.status(200).json(result);
+
+               if (result['active'] === true) {
+                    result['active'] = 'active';
+               }
+
+               else {
+                    result['active'] = 'inactive';
+               }
+
+               const data = {
+                    "username": result['username'],
+                    "email": result['email'],
+                    "active": result['active'],
+                    "profile_image": result['profile_image'] 
+               }
+
+               res.status(200).json(data);
           }
           else {
                res.status(400).json({
