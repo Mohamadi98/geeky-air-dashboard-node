@@ -13,7 +13,7 @@ const add_admin = async (req, res) => {
      const { username, email, password } = req.body;
      let profile_image = req.body.profile_image;
      let active = req.body.active;
-     
+
      if (active === 'active') {
           active = true;
      }
@@ -38,7 +38,7 @@ const add_admin = async (req, res) => {
           res.status(200).json({
                'message': 'admin added successfuly!'
           });
-     } 
+     }
      else {
           res.status(500).json({
                'message': result
@@ -54,7 +54,7 @@ const get_all_admins = async (req, res) => {
                if (result[i]['active'] === true) {
                     result[i]['active'] = 'active';
                }
-     
+
                else {
                     result[i]['active'] = 'inactive';
                }
@@ -63,6 +63,28 @@ const get_all_admins = async (req, res) => {
           res.status(200).json(result);
      } catch (error) {
           return `error fetching admins: ${error}`
+     }
+}
+
+const get_admin = async (req, res) => {
+     try {
+          const { id } = req.params;
+          const result = await adminServices.fetch_one_with_id(id);
+          if (result) {
+               if (result['role'] === 'superadmin') {
+                    return res.status(400).json({
+                         'message': 'No admin associated with this id'
+                    });
+               }
+               res.status(200).json(result);
+          }
+          else {
+               res.status(400).json({
+                    'message': 'No admin associated with this id'
+               });
+          }
+     } catch (error) {
+          return `there was an error fetching the data: ${error}`
      }
 }
 
@@ -86,20 +108,20 @@ const admin_login = async (req, res) => {
                          'token': token
                     });
                }
-               else{
+               else {
                     res.status(200).json({
                          'message': 'admin user',
                          'token': token
                     });
                }
           }
-          else{
+          else {
                res.status(400).json({
                     'message': 'invalid email or password'
                });
           }
      }
-     else{
+     else {
           res.status(400).json({
                'message': 'invalid email'
           })
@@ -109,5 +131,6 @@ const admin_login = async (req, res) => {
 adminRouter.post('/add-admin', adminMiddlewares.check_exist, add_admin);
 adminRouter.get('/get-all-admins', get_all_admins)
 adminRouter.post('/admin-login', admin_login)
+adminRouter.get('/get-admin/:id', get_admin)
 
 module.exports = adminRouter
