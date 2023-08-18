@@ -99,7 +99,7 @@ const edit_admin = async (req, res) => {
           else {
                active = false;
           }
-          const result = adminServices.update_admin_with_id(id, username, email, active, profile_image)
+          const result = await adminServices.update_admin_with_id(id, username, email, active, profile_image)
           if (result[0] === 1) {
                res.status(200).json({
                     'message': 'admin updated successfuly!'
