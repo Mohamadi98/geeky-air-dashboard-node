@@ -98,11 +98,25 @@ const super_admin_initialize = async () => {
     }
 }
 
+const delete_one_with_id = async (id) => {
+    try {
+        const result = await admin_agent.destroy({
+            where: {
+              'id': id
+            }
+          });
+          return result;
+    } catch (error) {
+        return `there was an error deleting admin: ${error}`
+    }
+}
+
 module.exports = {
     create: create,
     super_admin_initialize: super_admin_initialize,
     fetch_all: fetch_all,
     fetch_one_with_email: fetch_one_with_email,
     fetch_one_with_id: fetch_one_with_id,
-    update_admin_with_id: update_admin_with_id
+    update_admin_with_id: update_admin_with_id,
+    delete_one_with_id: delete_one_with_id
 }
