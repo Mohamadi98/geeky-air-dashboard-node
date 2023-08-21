@@ -132,6 +132,21 @@ const edit_admin = async (req, res) => {
      }
 }
 
+const delete_admin = async (req, res) => {
+     const { id } = req.params;
+     const result = await adminServices.delete_one_with_id(id);
+     if (result === 1) {
+          res.status(200).json({
+               'message': 'admin deleted successfuly!'
+          });
+     }
+     else {
+          res.status(400).json({
+               'message': 'there is no admin associated with this id'
+          });
+     }
+}
+
 const admin_login = async (req, res) => {
      const { email, password } = req.body;
      const result = await adminServices.fetch_one_with_email(email);
@@ -173,9 +188,10 @@ const admin_login = async (req, res) => {
 }
 
 adminRouter.post('/add-admin', adminMiddlewares.check_exist, add_admin);
-adminRouter.get('/get-all-admins', get_all_admins)
-adminRouter.post('/admin-login', admin_login)
-adminRouter.get('/get-admin/:id', check_super_admin.check_super_admin, get_admin)
-adminRouter.post('/edit-admin/:id', check_super_admin.check_super_admin, edit_admin)
+adminRouter.get('/get-all-admins', get_all_admins);
+adminRouter.post('/admin-login', admin_login);
+adminRouter.get('/get-admin/:id', check_super_admin.check_super_admin, get_admin);
+adminRouter.put('/edit-admin/:id', check_super_admin.check_super_admin, edit_admin);
+adminRouter.delete('/delete-admin/:id', check_super_admin.check_super_admin, delete_admin);
 
 module.exports = adminRouter
