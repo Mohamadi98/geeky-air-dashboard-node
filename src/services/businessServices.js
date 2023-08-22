@@ -32,6 +32,7 @@ const fetch_businesses = async () => {
         const result = await business_agent.findAll({
             include: working_day_time_agent,
           })
+          return result
     } catch (error) {
         return `error fetching all businesses: ${error}`
     }
