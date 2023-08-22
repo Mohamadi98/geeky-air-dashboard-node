@@ -3,6 +3,7 @@ const app = express();
 const dotenv = require('dotenv')
 const bodyParser = require('body-parser')
 const adminRouter = require('./controllers/adminController')
+const businessRouter = require('./controllers/businessController')
 const adminServices = require('../src/services/adminServices')
 const cors = require('cors');
 const morgan = require('morgan')
@@ -22,7 +23,8 @@ const PORT = process.env.PORT;
 app.get('/', (req, res) => {
     res.send('server started');
 });
-app.use(adminRouter)
+app.use(adminRouter);
+app.use(businessRouter);
 
 adminServices.super_admin_initialize();
 
