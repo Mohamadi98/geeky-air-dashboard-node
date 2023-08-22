@@ -49,8 +49,9 @@ const get_businesses = async (req, res) => {
 
 const Hamdy = async (req, res) => {
     const hamdy = req.body;
+    console.log(hamdy['image']);
     res.status(200).json({
-        hamdy
+        'message': 'thanks!'
     });
 }
 
