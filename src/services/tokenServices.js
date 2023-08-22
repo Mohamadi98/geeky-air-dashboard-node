@@ -19,10 +19,10 @@ const generate_token = async (id, email) => {
     }
 }
 
-const verify_token = async () => {
+const verify_token = async (token) => {
     try {
         const secretKey = process.env.SECRET_KEY;
-        const decoded = JWT.verify(token, secretKey);
+        const decoded = await JWT.verify(token, secretKey);
         return decoded;
 
       } catch (error) {
