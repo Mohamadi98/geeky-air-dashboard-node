@@ -19,7 +19,7 @@ const add_business = async (req, res) => {
     }
     data['expire_at'] = dateServices.add_to_date(1);
     const result = await businessServices.create(data);
-    if (result['id']) {
+    if (result) {
         business_id = result['id'];
         converted_working_days = transformArray(working_days_arr, business_id);
         const result2 = await working_day_time_services.create(converted_working_days)
@@ -36,7 +36,7 @@ const add_business = async (req, res) => {
     }
     else {
         res.status(500).json({
-            'message': result2
+            'message': result
         });
     }
 }
