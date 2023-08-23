@@ -13,7 +13,6 @@ const businessRouter = express.Router();
 const add_business = async (req, res) => {
     const data = req.body;
     working_days_arr = req.body.workingDays;
-    delete data.token;
     delete data.workingDays;
     if (data['logo'] === "") {
         data['logo'] = 'https://via.placeholder.com/180x180&text=image1';
