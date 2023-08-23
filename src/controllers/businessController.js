@@ -20,13 +20,20 @@ const add_business = async (req, res) => {
     }
     data['expire_at'] = dateServices.add_to_date(1);
     const result = await businessServices.create(data);
-    business_id = result['id'];
-    converted_working_days = transformArray(working_days_arr, business_id);
-    const result2 = working_day_time_services.create(converted_working_days)
-    if (result2) {
-        res.status(200).json({
-            'message': 'business added successfuly!'
-        });
+    if (result['id']) {
+        business_id = result['id'];
+        converted_working_days = transformArray(working_days_arr, business_id);
+        const result2 = await working_day_time_services.create(converted_working_days)
+        if (result2) {
+            res.status(200).json({
+                'message': 'business added successfuly!'
+            });
+        }
+        else {
+            res.status(500).json({
+                'message': result2
+            });
+        }
     }
     else {
         res.status(500).json({
@@ -36,7 +43,7 @@ const add_business = async (req, res) => {
 }
 
 const get_businesses = async (req, res) => {
-    const result = await businessServices.fetch_businesses();
+    const result = await businessServices.show_all_businesses();
     if (result) {
         res.status(200).json({
             result

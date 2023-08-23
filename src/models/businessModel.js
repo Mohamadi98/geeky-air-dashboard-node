@@ -11,11 +11,14 @@ const business_agent = db_client.define('business', {
     name: {
         type: DataTypes.STRING
     },
+    description: {
+        type: DataTypes.STRING
+    },
     email: {
         type: DataTypes.STRING,
         unique: true
     },
-    phone_no: {
+    phone_number: {
         type: DataTypes.STRING,
         unique: true
     },
@@ -25,7 +28,7 @@ const business_agent = db_client.define('business', {
     state: {
         type: DataTypes.STRING
     },
-    website: {
+    web_site: {
         type: DataTypes.STRING
     },
     street: {
