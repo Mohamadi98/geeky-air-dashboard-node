@@ -5,6 +5,7 @@ const check_business_creds = require('../middlewares/check_business_creds')
 const businessServices = require('../services/businessServices')
 const transformArray = require('../services/convert_working_days_array')
 const working_day_time_services = require('../services/working_day_time_services')
+const dateServices = require('../services/dateServices')
 
 dotenv.config();
 const businessRouter = express.Router();
@@ -17,6 +18,7 @@ const add_business = async (req, res) => {
     if (data['logo'] === "") {
         data['logo'] = 'https://via.placeholder.com/180x180&text=image1';
     }
+    data['expire_at'] = dateServices.add_to_date(1);
     const result = await businessServices.create(data);
     business_id = result['id'];
     converted_working_days = transformArray(working_days_arr, business_id);
@@ -48,11 +50,7 @@ const get_businesses = async (req, res) => {
 }
 
 const Hamdy = async (req, res) => {
-    const hamdy = req.body;
-    console.log(hamdy['image']);
-    res.status(200).json({
-        'message': 'thanks!'
-    });
+    
 }
 
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business);

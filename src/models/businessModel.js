@@ -48,9 +48,14 @@ const business_agent = db_client.define('business', {
     },
     likes: {
         type: DataTypes.INTEGER
+    },
+    expire_at: {
+        type: DataTypes.DATE
     }
 }, {
-    timestamps: false,
+    timestamps: true,
+    createdAt: "created_at",
+    updatedAt: "updated_at",
     tableName: 'business'
 });
 
