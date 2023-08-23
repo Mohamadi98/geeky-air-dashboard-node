@@ -56,7 +56,8 @@ const get_businesses = async (req, res) => {
 }
 
 const Hamdy = async (req, res) => {
-    const image = req.body.image;
+    const token = req.headers.authorization;
+    console.log(token);
     res.status(200).json({
         'message': 'done'
     });
