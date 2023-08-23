@@ -38,8 +38,20 @@ const fetch_businesses = async () => {
     }
 }
 
+const show_all_businesses = async () => {
+    try {
+        const result = await business_agent.findAll({
+            attributes: ['id', 'logo', 'web_site', 'created_at', 'name', 'expire_at', 'street', 'state', 'city1', 'city2', 'city_zip', 'phone_number']
+        });
+        return result;
+    } catch (error) {
+        return `error showing all businesses: ${error}`
+    }
+}
+
 module.exports = {
     create: create,
     fetch_business_with_email_phone: fetch_business_with_email_phone,
-    fetch_businesses: fetch_businesses
+    fetch_businesses: fetch_businesses,
+    show_all_businesses: show_all_businesses
 }
