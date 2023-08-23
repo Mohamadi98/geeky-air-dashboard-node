@@ -57,7 +57,10 @@ const get_businesses = async (req, res) => {
 }
 
 const Hamdy = async (req, res) => {
-    
+    const image = req.body.image;
+    res.status(200).json({
+        'message': 'done'
+    });
 }
 
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business);
