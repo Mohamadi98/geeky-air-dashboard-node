@@ -11,6 +11,9 @@ city_zip VARCHAR(20),
 city1 VARCHAR(20), 
 city2 VARCHAR(20), 
 tags TEXT[], 
-logo VARCHAR(100), 
-likes INTEGER
+logo VARCHAR(100),
+likes INTEGER,
+created_at DATE,
+updated_at DATE,
+expire_at DATE
 );
