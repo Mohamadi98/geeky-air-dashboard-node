@@ -17,7 +17,7 @@ const fetch_business_with_email_phone = async (email_value, phone_value) => {
             where: {
                 [Op.or]: [
                   { email: email_value },
-                  { phone_no: phone_value }
+                  { phone_number: phone_value }
                 ]
             }
         });
