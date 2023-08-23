@@ -2,7 +2,7 @@ const adminServices = require('../services/adminServices')
 const tokenServices = require('../services/tokenServices')
 
 const check_active = async (req, res, next) => {
-    const token = req.header['Authorization'];
+    const token = req.headers.authorization;
     console.log(token);
     const decoded_token = await tokenServices.verify_token(token);
     if (decoded_token['id']) {
