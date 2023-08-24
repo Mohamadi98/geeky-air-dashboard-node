@@ -10,14 +10,17 @@ admin.initializeApp({
 });
 
 const upload_logo = async (base64Image, business_name) => {
+    const split_on_semicolon = base64Image.split(';')[0];
+    const image_extension = split_on_semicolon.split('/')[1];
+    const modified_base64 = base64Image.split(',')[1];
     const filename = `${business_name}-logo`;
     const bucket = admin.storage().bucket();
-    const imageBuffer = Buffer.from(base64Image, 'base64');
+    const imageBuffer = Buffer.from(modified_base64, 'base64');
   
     const file = bucket.file(filename);
     await file.save(imageBuffer, {
         metadata: {
-            contentType: 'image/jpeg', // Set the content type of your image
+            contentType: `image/${image_extension}`, // Set the content type of your image
         },
     });
   
