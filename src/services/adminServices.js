@@ -42,18 +42,34 @@ const fetch_one_with_id = async (value) => {
 
 const update_admin_with_id = async (id, username, email, active, profile_image) => {
     try {
-        const result = await admin_agent.update(
-            {
-                'username': username,
-                'email': email,
-                'active': active,
-                'profile_image': profile_image
-            },
-            {
-                where: { 'id': id }
-            }
-        )
-        return result;
+        if (profile_image === "") {
+            const result = await admin_agent.update(
+                {
+                    'username': username,
+                    'email': email,
+                    'active': active,
+                },
+                {
+                    where: { 'id': id }
+                }
+            )
+            return result;
+        }
+
+        else {
+            const result = await admin_agent.update(
+                {
+                    'username': username,
+                    'email': email,
+                    'active': active,
+                    'profile_image': profile_image
+                },
+                {
+                    where: { 'id': id }
+                }
+            )
+            return result;
+        }
 
     } catch (error) {
        return `there was an error updating the admin: ${error}`

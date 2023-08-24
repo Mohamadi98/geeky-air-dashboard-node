@@ -9,6 +9,29 @@ admin.initializeApp({
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
 });
 
+const upload_admin_image = async (base64Image, admin_email) => {
+    const split_on_semicolon = base64Image.split(';')[0];
+    const image_extension = split_on_semicolon.split('/')[1];
+    const modified_base64 = base64Image.split(',')[1];
+    const filename = `${admin_email}-image`;
+    const bucket = admin.storage().bucket();
+    const imageBuffer = Buffer.from(modified_base64, 'base64');
+  
+    const file = bucket.file(filename);
+    await file.save(imageBuffer, {
+        metadata: {
+            contentType: `image/${image_extension}`, 
+        },
+    });
+  
+    const [url] = await file.getSignedUrl({
+        action: 'read',
+        expires: '03-01-2500', 
+    });
+    
+    return url;
+}
+
 const upload_logo = async (base64Image, business_name) => {
     const split_on_semicolon = base64Image.split(';')[0];
     const image_extension = split_on_semicolon.split('/')[1];
@@ -64,5 +87,6 @@ const upload_business_images = async (images_arr, business_name) => {
 
 module.exports = {
     upload_logo: upload_logo,
-    upload_business_images, upload_business_images
+    upload_business_images, upload_business_images,
+    upload_admin_image: upload_admin_image
 }
