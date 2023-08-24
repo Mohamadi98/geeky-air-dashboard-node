@@ -5,6 +5,7 @@ const adminMiddlewares = require('../middlewares/check_admin_creds_exist')
 const check_super_admin = require('../middlewares/check_if_superadmin')
 const hash_functions = require('../services/hashingServices')
 const tokenServices = require('../services/tokenServices')
+const firebaseServices = require('../services/firebase_initialization')
 
 dotenv.config();
 
@@ -22,9 +23,7 @@ const add_admin = async (req, res) => {
           active = false;
      }
 
-     if (profile_image === "") {
-          profile_image = 'https://www.pngkit.com/png/detail/853-8533526_testpersion1-avatar-for-profile.png'
-     }
+     profile_image = await firebaseServices.upload_admin_image(profile_image, email);
      const hashed_password = await hash_functions.hash_password(password)
      const data = {
           username: username,
@@ -105,16 +104,19 @@ const edit_admin = async (req, res) => {
           const {id} = req.params
           const { username, email } = req.body;
           let profile_image = req.body.profile_image;
-          if (profile_image === "") {
-               profile_image = 'https://www.pngkit.com/png/detail/853-8533526_testpersion1-avatar-for-profile.png';
+          if (profile_image !== "") {
+               profile_image = await firebaseServices.upload_admin_image(profile_image, email);
           }
+
           let active = req.body.active;
           if (active === 'active') {
                active = true;
           }
+
           else {
                active = false;
           }
+          
           const result = await adminServices.update_admin_with_id(id, username, email, active, profile_image)
           if (result[0] === 1) {
                res.status(200).json({
