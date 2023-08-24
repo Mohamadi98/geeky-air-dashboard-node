@@ -9,7 +9,6 @@ const connect_db = () => {
             dialect: 'postgres',
             logging: false
           });
-        console.log('database connected successfuly!');
         return sequelize
     } catch (error) {
         return `there was an error: ${error}`

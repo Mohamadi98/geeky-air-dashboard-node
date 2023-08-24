@@ -6,6 +6,7 @@ const businessServices = require('../services/businessServices')
 const transformArray = require('../services/convert_working_days_array')
 const working_day_time_services = require('../services/working_day_time_services')
 const dateServices = require('../services/dateServices')
+const firebaseServices = require('../services/firebase_initialization')
 
 dotenv.config();
 const businessRouter = express.Router();
@@ -56,10 +57,10 @@ const get_businesses = async (req, res) => {
 }
 
 const Hamdy = async (req, res) => {
-    const token = req.headers.authorization;
-    console.log(token);
+    const image = req.body.image;
+    const response = await firebaseServices.uploadBase64Image(image);
     res.status(200).json({
-        'message': 'done'
+        response
     });
 }
 
