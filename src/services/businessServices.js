@@ -11,7 +11,7 @@ const create = async (data) => {
     }
 }
 
-const fetch_business_with_email_phone = async (email_value, phone_value) => {
+const fetch_business_by_email_phone = async (email_value, phone_value) => {
     try {
         const result = await business_agent.findOne({
             where: {
@@ -27,10 +27,13 @@ const fetch_business_with_email_phone = async (email_value, phone_value) => {
     }
 }
 
-const fetch_businesses = async () => {
+const fetch_business_by_id = async (id) => {
     try {
-        const result = await business_agent.findAll({
+        const result = await business_agent.findOne({
             include: working_day_time_agent,
+            where: {
+                id: id
+            }
           })
           return result
     } catch (error) {
@@ -51,7 +54,7 @@ const show_all_businesses = async () => {
 
 module.exports = {
     create: create,
-    fetch_business_with_email_phone: fetch_business_with_email_phone,
-    fetch_businesses: fetch_businesses,
-    show_all_businesses: show_all_businesses
+    fetch_business_by_email_phone: fetch_business_by_email_phone,
+    show_all_businesses: show_all_businesses,
+    fetch_business_by_id: fetch_business_by_id
 }
