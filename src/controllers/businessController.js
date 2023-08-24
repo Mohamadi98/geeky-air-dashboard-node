@@ -21,6 +21,7 @@ const add_business = async (req, res) => {
     }
     else {
         data['logo'] = await firebaseServices.upload_logo(data['logo'], business_name);
+        console.log(`the resulting url: ${data.logo}`);
     }
     data['expire_at'] = dateServices.add_to_date(1);
     const result = await businessServices.create(data);
