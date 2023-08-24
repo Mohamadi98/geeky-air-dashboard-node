@@ -10,7 +10,7 @@ const morgan = require('morgan')
 
 
 dotenv.config();
-app.use(express.json({ limit: '25mb' }));
+app.use(express.json({ limit: '50mb' }));
 app.use(
     morgan('combined', {
       skip: (req) => req.method === "OPTIONS",

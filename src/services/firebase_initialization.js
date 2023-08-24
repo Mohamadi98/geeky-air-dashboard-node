@@ -6,14 +6,15 @@ dotenv.config();
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    storageBucket: 'gs://dashboard-chris.appspot.com',
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
 });
 
-const uploadBase64Image = async (base64Image) => {
+const upload_logo = async (base64Image, business_name) => {
+    const filename = `${business_name}-logo`;
     const bucket = admin.storage().bucket();
     const imageBuffer = Buffer.from(base64Image, 'base64');
   
-    const file = bucket.file('test3');
+    const file = bucket.file(filename);
     await file.save(imageBuffer, {
         metadata: {
             contentType: 'image/jpeg', // Set the content type of your image
@@ -24,10 +25,10 @@ const uploadBase64Image = async (base64Image) => {
         action: 'read',
         expires: '03-01-2500', // Set a distant future expiration date
     });
-
+    
     return url;
 }
 
 module.exports = {
-    uploadBase64Image: uploadBase64Image
+    upload_logo: upload_logo
 }

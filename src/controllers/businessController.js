@@ -13,10 +13,15 @@ const businessRouter = express.Router();
 
 const add_business = async (req, res) => {
     const data = req.body;
+    const business_name = req.body.name;
     working_days_arr = req.body.workingDays;
     delete data.workingDays;
     if (data['logo'] === "") {
         data['logo'] = 'https://via.placeholder.com/180x180&text=image1';
+    }
+    else {
+        data['logo'] = await firebaseServices.upload_logo(data['logo'], business_name);
+        console.log(`the resulting url: ${data.logo}`);
     }
     data['expire_at'] = dateServices.add_to_date(1);
     const result = await businessServices.create(data);
