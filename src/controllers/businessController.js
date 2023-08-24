@@ -46,7 +46,7 @@ const add_business = async (req, res) => {
     }
 }
 
-const get_businesses = async (req, res) => {
+const get_all_businesses = async (req, res) => {
     const result = await businessServices.show_all_businesses();
     if (result) {
         res.status(200).json({
@@ -60,6 +60,21 @@ const get_businesses = async (req, res) => {
     }
 }
 
+const get_business = async (req, res) => {
+    const {id} = req.params;
+    const result = await businessServices.fetch_business_by_id(id);
+    if (result) {
+        res.status(200).json({
+            'data': result
+        });
+    }
+    else {
+        res.status(400).json({
+            'message': 'No business with this id'
+        });
+    }
+}
+
 const Hamdy = async (req, res) => {
     const image = req.body.image;
     const response = await firebaseServices.uploadBase64Image(image);
@@ -69,7 +84,8 @@ const Hamdy = async (req, res) => {
 }
 
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business);
-businessRouter.get('/get-businesses', get_businesses);
+businessRouter.get('/get-businesses', get_all_businesses);
+businessRouter.get('/get-business/:id', get_business)
 businessRouter.post('/hamdy', Hamdy);
 
 module.exports = businessRouter
