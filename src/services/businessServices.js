@@ -52,9 +52,23 @@ const show_all_businesses = async () => {
     }
 }
 
+const delete_business_by_id = async (id) => {
+    try {
+        const result = await business_agent.destroy({
+            where: {
+              'id': id
+            }
+          });
+          return result;
+    } catch (error) {
+        return `there was an error deleting admin: ${error}`
+    }
+}
+
 module.exports = {
     create: create,
     fetch_business_by_email_phone: fetch_business_by_email_phone,
     show_all_businesses: show_all_businesses,
-    fetch_business_by_id: fetch_business_by_id
+    fetch_business_by_id: fetch_business_by_id,
+    delete_business_by_id: delete_business_by_id
 }
