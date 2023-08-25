@@ -4,17 +4,21 @@ const serviceAccount = require('../../dashboard-chris-firebase-adminsdk-7tyh2-34
 
 dotenv.config();
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+const firebaseAgent = admin.initializeApp({
+    credential: admin.credential.cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'), // Replace newline characters
+    }),
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
-});
+  });
 
 const upload_admin_image = async (base64Image, admin_email) => {
     const split_on_semicolon = base64Image.split(';')[0];
     const image_extension = split_on_semicolon.split('/')[1];
     const modified_base64 = base64Image.split(',')[1];
     const filename = `${admin_email}-image`;
-    const bucket = admin.storage().bucket();
+    const bucket = firebaseAgent.storage().bucket();
     const imageBuffer = Buffer.from(modified_base64, 'base64');
   
     const file = bucket.file(filename);
@@ -37,7 +41,7 @@ const upload_logo = async (base64Image, business_name) => {
     const image_extension = split_on_semicolon.split('/')[1];
     const modified_base64 = base64Image.split(',')[1];
     const filename = `${business_name}-logo`;
-    const bucket = admin.storage().bucket();
+    const bucket = firebaseAgent.storage().bucket();
     const imageBuffer = Buffer.from(modified_base64, 'base64');
   
     const file = bucket.file(filename);
@@ -63,7 +67,7 @@ const upload_business_images = async (images_arr, business_name) => {
         const image_extension = split_on_semicolon.split('/')[1];
         const modified_base64 = image.split(',')[1];
         const filename = `${business_name}-image-${counter}`;
-        const bucket = admin.storage().bucket();
+        const bucket = firebaseAgent.storage().bucket();
         const imageBuffer = Buffer.from(modified_base64, 'base64');
   
         const file = bucket.file(filename);

@@ -86,6 +86,21 @@ const get_business = async (req, res) => {
     }
 }
 
+const delete_business = async (req, res) => {
+    const { id } = req.params;
+    const result = await businessServices.delete_business_by_id(id);
+    if (result === 1) {
+         res.status(200).json({
+              'message': 'business deleted successfuly!'
+         });
+    }
+    else {
+         res.status(400).json({
+              'message': 'there is no business associated with this id'
+         });
+    }
+}
+
 const Hamdy = async (req, res) => {
     const image = req.body.image;
     const response = await firebaseServices.uploadBase64Image(image);
@@ -97,6 +112,7 @@ const Hamdy = async (req, res) => {
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business);
 businessRouter.get('/get-businesses', get_all_businesses);
 businessRouter.get('/get-business/:id', get_business)
+businessRouter.delete('/delete-business', delete_business)
 businessRouter.post('/hamdy', Hamdy);
 
 module.exports = businessRouter
