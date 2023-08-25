@@ -49,6 +49,9 @@ const business_agent = db_client.define('business', {
     images: {
         type: DataTypes.ARRAY(DataTypes.STRING)
     },
+    video: {
+        type: DataTypes.STRING
+    },
     logo: {
         type: DataTypes.STRING
     },
