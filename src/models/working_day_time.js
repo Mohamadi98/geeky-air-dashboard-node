@@ -43,7 +43,8 @@ const working_day_time_agent = db_client.define('business', {
 );
 
 business_agent.hasMany(working_day_time_agent, {
-    foreignKey: 'business_id'
+    foreignKey: 'business_id',
+    onDelete: 'CASCADE',
   });
   working_day_time_agent.belongsTo(business_agent, {
     foreignKey: 'business_id'

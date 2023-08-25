@@ -7,12 +7,19 @@ const check_active = async (req, res, next) => {
     if (decoded_token['id']) {
         const id = decoded_token['id'];
         const result = await adminServices.fetch_one_with_id(id);
-            if (result['active'] === true) {
-                next();
+            if (result) {
+                if (result['active'] === true) {
+                    next();
+                }
+                else {
+                    return res.status(400).json({
+                        'message': 'inactive'
+                    });
+                }
             }
             else {
                 return res.status(400).json({
-                    'message': 'inactive'
+                    'message': 'no admin associated with this id'
                 });
             }
     }
