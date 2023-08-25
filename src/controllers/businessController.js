@@ -16,6 +16,7 @@ const add_business = async (req, res) => {
     const business_name = req.body.name;
     working_days_arr = req.body.workingDays;
     delete data.workingDays;
+
     if (data['logo'] === "") {
         data['logo'] = 'https://via.placeholder.com/180x180&text=image1';
     }
@@ -23,9 +24,15 @@ const add_business = async (req, res) => {
     else {
         data['logo'] = await firebaseServices.upload_logo(data['logo'], business_name);
     }
+
     if (data['images'].length !== 0) {
         data['images'] = await firebaseServices.upload_business_images(data['images'], business_name);
     }
+
+    // if (data['video'] !== "") {
+    //     data['video'] = await firebaseServices.upload_business_video(data['video'], business_name);
+    // }
+
     data['expire_at'] = dateServices.add_to_date(1);
     const result = await businessServices.create(data);
     if (result.id) {
