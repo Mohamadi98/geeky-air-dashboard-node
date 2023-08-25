@@ -112,7 +112,7 @@ const Hamdy = async (req, res) => {
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business);
 businessRouter.get('/get-businesses', get_all_businesses);
 businessRouter.get('/get-business/:id', get_business)
-businessRouter.delete('/delete-business', delete_business)
+businessRouter.delete('/delete-business/:id', delete_business)
 businessRouter.post('/hamdy', Hamdy);
 
 module.exports = businessRouter
