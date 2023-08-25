@@ -23,7 +23,7 @@ const add_admin = async (req, res) => {
           active = false;
      }
 
-     profile_image = await firebaseServices.upload_admin_image(profile_image, email);
+     profile_image = await firebaseServices.upload_admin_image(profile_image, username);
      const hashed_password = await hash_functions.hash_password(password)
      const data = {
           username: username,
