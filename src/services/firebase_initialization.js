@@ -1,6 +1,5 @@
 const admin = require('firebase-admin');
 const dotenv = require('dotenv')
-const serviceAccount = require('../../dashboard-chris-firebase-adminsdk-7tyh2-346379d694.json')
 
 dotenv.config();
 
