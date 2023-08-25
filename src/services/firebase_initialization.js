@@ -12,11 +12,11 @@ const firebaseAgent = admin.initializeApp({
     storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
   });
 
-const upload_admin_image = async (base64Image, admin_email) => {
+const upload_admin_image = async (base64Image, admin_name) => {
     const split_on_semicolon = base64Image.split(';')[0];
     const image_extension = split_on_semicolon.split('/')[1];
     const modified_base64 = base64Image.split(',')[1];
-    const filename = `${admin_email}-image`;
+    const filename = `${admin_name}-image`;
     const bucket = firebaseAgent.storage().bucket();
     const imageBuffer = Buffer.from(modified_base64, 'base64');
   
