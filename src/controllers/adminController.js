@@ -105,7 +105,7 @@ const edit_admin = async (req, res) => {
           const { username, email } = req.body;
           let profile_image = req.body.profile_image;
           if (profile_image !== "") {
-               profile_image = await firebaseServices.upload_admin_image(profile_image, email);
+               profile_image = await firebaseServices.upload_admin_image(profile_image, username);
           }
 
           let active = req.body.active;
@@ -118,6 +118,7 @@ const edit_admin = async (req, res) => {
           }
           
           const result = await adminServices.update_admin_with_id(id, username, email, active, profile_image)
+          console.log(result);
           if (result[0] === 1) {
                res.status(200).json({
                     'message': 'admin updated successfuly!'
