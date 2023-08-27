@@ -65,10 +65,26 @@ const delete_business_by_id = async (id) => {
     }
 }
 
+const update_business_by_id = async (business_data, id) => {
+    try {
+            const result = await business_agent.update(business_data,
+                {
+                    where: { 'id': id }
+                }
+            )
+            return result;
+        }
+
+    catch (error) {
+       return `there was an error updating the business: ${error}`
+    }
+}
+
 module.exports = {
     create: create,
     fetch_business_by_email_phone: fetch_business_by_email_phone,
     show_all_businesses: show_all_businesses,
     fetch_business_by_id: fetch_business_by_id,
+    update_business_by_id: update_business_by_id,
     delete_business_by_id: delete_business_by_id
 }

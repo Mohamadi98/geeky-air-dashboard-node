@@ -29,9 +29,9 @@ const add_business = async (req, res) => {
         data['images'] = await firebaseServices.upload_business_images(data['images'], business_name);
     }
 
-    // if (data['video'] !== "") {
-    //     data['video'] = await firebaseServices.upload_business_video(data['video'], business_name);
-    // }
+    if (data['video'] !== "") {
+        data['video'] = await firebaseServices.upload_business_video(data['video'], business_name);
+    }
 
     data['expire_at'] = dateServices.add_to_date(1);
     const result = await businessServices.create(data);
@@ -101,6 +101,40 @@ const delete_business = async (req, res) => {
     }
 }
 
+const update_business = async (req, res) => {
+    const id = req.params.id
+    const data = req.body;
+    const business_name = req.body.name;
+    working_days_arr = req.body.workingDays;
+    delete data.workingDays;
+
+    data['logo'] = await firebaseServices.upload_logo(data['logo'], business_name);
+    data['images'] = await firebaseServices.upload_business_images(data['images'], business_name);
+    data['video'] = await firebaseServices.upload_business_video(data['video'], business_name);
+
+    // data['expire_at'] = dateServices.add_to_date(1);
+    const result = await businessServices.update_business_by_id(data, id);
+    if (result[0] === 1) {
+        converted_working_days = transformArray(working_days_arr, id);
+        const result2 = await working_day_time_services.update(converted_working_days, id);
+        if (result2) {
+            res.status(200).json({
+                'message': 'business updated successfuly!'
+            });
+        }
+        else {
+            res.status(500).json({
+                'message': `error creating working_day_time data: ${result2}`
+            });
+        }
+    }
+    else {
+        res.status(400).json({
+            'message': 'NO business associated with this id'
+        });
+    }
+}
+
 const Hamdy = async (req, res) => {
     const image = req.body.image;
     const response = await firebaseServices.uploadBase64Image(image);
@@ -112,6 +146,7 @@ const Hamdy = async (req, res) => {
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business);
 businessRouter.get('/get-businesses', get_all_businesses);
 businessRouter.get('/get-business/:id', get_business)
+businessRouter.put('/update-business/:id', update_business)
 businessRouter.delete('/delete-business/:id', delete_business)
 businessRouter.post('/hamdy', Hamdy);
 
