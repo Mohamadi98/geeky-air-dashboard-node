@@ -10,6 +10,37 @@ const create = async (data) => {
     }
 }
 
+const delete_data = async (id) => {
+    try {
+        const result = await working_day_time_agent.destroy({
+            where: {
+              'business_id': id
+            }
+    });
+    return result;
+    } catch (error) {
+        return `error deleting working_day_time table data: ${error}`
+    }
+}
+
+const update = async (data, id) => {
+    try {
+        const result = await delete_data(id);
+        if (result) {
+            const result2 = await create(data);
+            return result2;
+        }
+        else {
+            return `error in working_day_time update function:`
+        }
+    }
+
+    catch (error) {
+        return `there was an error updating the working_day_time table: ${error}`
+    }
+}
+
 module.exports = {
-    create: create
+    create: create,
+    update: update
 }
