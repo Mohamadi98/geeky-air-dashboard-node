@@ -112,7 +112,6 @@ const update_business = async (req, res) => {
     data['images'] = await firebaseServices.upload_business_images(data['images'], business_name);
     data['video'] = await firebaseServices.upload_business_video(data['video'], business_name);
 
-    // data['expire_at'] = dateServices.add_to_date(1);
     const result = await businessServices.update_business_by_id(data, id);
     if (result[0] === 1) {
         converted_working_days = transformArray(working_days_arr, id);
