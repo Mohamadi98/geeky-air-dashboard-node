@@ -146,7 +146,7 @@ businessRouter.post('/add-business', admin_active_check.check_active, check_busi
 businessRouter.get('/get-businesses', get_all_businesses);
 businessRouter.get('/get-business/:id', get_business)
 businessRouter.put('/update-business/:id', admin_active_check.check_active, update_business)
-businessRouter.delete('/delete-business/:id', delete_business)
+businessRouter.delete('/delete-business/:id', admin_active_check.check_active, delete_business)
 businessRouter.post('/hamdy', Hamdy);
 
 module.exports = businessRouter
