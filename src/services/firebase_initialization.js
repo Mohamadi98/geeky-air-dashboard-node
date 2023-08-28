@@ -36,13 +36,17 @@ const upload_admin_image = async (base64Image, admin_name) => {
 }
 
 const upload_logo = async (base64Image, business_name) => {
+    if (base64Image.length < 700) {
+        return base64Image;
+    }
     const split_on_semicolon = base64Image.split(';')[0];
     const image_extension = split_on_semicolon.split('/')[1];
     const modified_base64 = base64Image.split(',')[1];
-    const filename = `${business_name}-logo`;
+    const logo_id = parseInt(Math.random() * 1000000);
+    const filename = `${business_name}-logo-${logo_id}`;
     const bucket = firebaseAgent.storage().bucket();
     const imageBuffer = Buffer.from(modified_base64, 'base64');
-  
+
     const file = bucket.file(filename);
     await file.save(imageBuffer, {
         metadata: {
@@ -59,13 +63,17 @@ const upload_logo = async (base64Image, business_name) => {
 }
 
 const upload_business_images = async (images_arr, business_name) => {
-    let counter = 1;
     let images_url_list = [];
     for (const image of images_arr) {
+        if (image.length < 700) {
+            images_url_list.push(image);
+            continue;
+        }
         const split_on_semicolon = image.split(';')[0];
         const image_extension = split_on_semicolon.split('/')[1];
         const modified_base64 = image.split(',')[1];
-        const filename = `${business_name}-image-${counter}`;
+        const image_id = parseInt(Math.random() * 1000000);
+        const filename = `${business_name}-image-${image_id}`;
         const bucket = firebaseAgent.storage().bucket();
         const imageBuffer = Buffer.from(modified_base64, 'base64');
   
@@ -82,16 +90,20 @@ const upload_business_images = async (images_arr, business_name) => {
         });
 
         images_url_list.push(url);
-        counter++;
         };
         return images_url_list;
 }
 
 const upload_business_video = async (base64_video, business_name) => {
+    console.log(base64_video);
+    if (base64_video.length < 700) {
+        return base64_video;
+    }
     const split_on_semicolon = base64_video.split(';')[0];
     const image_extension = split_on_semicolon.split('/')[1];
     const modified_base64 = base64_video.split(',')[1];
-    const filename = `${business_name}-video`;
+    const video_id = parseInt(Math.random() * 1000000);
+    const filename = `${business_name}-video-${video_id}`;
     const bucket = admin.storage().bucket();
     const imageBuffer = Buffer.from(modified_base64, 'base64');
   
