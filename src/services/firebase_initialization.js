@@ -95,7 +95,6 @@ const upload_business_images = async (images_arr, business_name) => {
 }
 
 const upload_business_video = async (base64_video, business_name) => {
-    console.log(base64_video);
     if (base64_video.length < 700) {
         return base64_video;
     }

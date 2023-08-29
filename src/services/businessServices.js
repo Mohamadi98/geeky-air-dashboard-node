@@ -61,7 +61,7 @@ const delete_business_by_id = async (id) => {
           });
           return result;
     } catch (error) {
-        return `there was an error deleting admin: ${error}`
+        return `there was an error deleting business: ${error}`
     }
 }
 
@@ -80,11 +80,28 @@ const update_business_by_id = async (business_data, id) => {
     }
 }
 
+const fetch_business_via_website_request = async (website_name) => {
+    try {
+        const result = await business_agent.findAll({
+            include: working_day_time_agent,
+            where: {
+                websites: {
+                    $contains: [{ website_name: true }]
+                  }
+            }
+          })
+          return result
+    } catch (error) {
+        return `error fetching all businesses: ${error}`
+    }
+}
+
 module.exports = {
     create: create,
     fetch_business_by_email_phone: fetch_business_by_email_phone,
     show_all_businesses: show_all_businesses,
     fetch_business_by_id: fetch_business_by_id,
     update_business_by_id: update_business_by_id,
-    delete_business_by_id: delete_business_by_id
+    delete_business_by_id: delete_business_by_id,
+    fetch_business_via_website_request: fetch_business_via_website_request
 }

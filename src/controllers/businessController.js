@@ -34,6 +34,13 @@ const add_business = async (req, res) => {
     }
 
     data['expire_at'] = dateServices.add_to_date(1);
+    data['websites'] = [{
+        'post-your-biz4.vercel.app' : true
+        },
+        {
+            'post-your-biz1.vercel.app' : true
+        }
+    ]
     const result = await businessServices.create(data);
     if (result.id) {
         business_id = result['id'];
@@ -134,6 +141,17 @@ const update_business = async (req, res) => {
     }
 }
 
+const get_businesses_per_website_request = async (req, res) => {
+    const { website_name } = req.params;
+    const result = await businessServices.fetch_business_via_website_request(website_name);
+    if (result) {
+        res.status(200).json(result)
+    }
+    else {
+        res.status(400).json(result)
+    }
+}
+
 const Hamdy = async (req, res) => {
     const image = req.body.image;
     const response = await firebaseServices.uploadBase64Image(image);
@@ -147,6 +165,7 @@ businessRouter.get('/get-businesses', get_all_businesses);
 businessRouter.get('/get-business/:id', get_business)
 businessRouter.put('/update-business/:id', admin_active_check.check_active, update_business)
 businessRouter.delete('/delete-business/:id', admin_active_check.check_active, delete_business)
+businessRouter.get('/get-businesses-website-request/:website_name', get_businesses_per_website_request)
 businessRouter.post('/hamdy', Hamdy);
 
 module.exports = businessRouter

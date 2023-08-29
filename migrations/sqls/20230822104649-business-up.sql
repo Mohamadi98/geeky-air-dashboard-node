@@ -16,6 +16,7 @@ images TEXT[],
 video VARCHAR(700),
 logo VARCHAR(700),
 likes INTEGER,
+websites JSONB,
 created_at DATE,
 updated_at DATE,
 expire_at DATE

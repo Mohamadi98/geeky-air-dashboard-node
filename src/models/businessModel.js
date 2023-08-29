@@ -60,6 +60,9 @@ const business_agent = db_client.define('business', {
     },
     expire_at: {
         type: DataTypes.DATE
+    },
+    websites: {
+        type: DataTypes.JSONB
     }
 }, {
     timestamps: true,
