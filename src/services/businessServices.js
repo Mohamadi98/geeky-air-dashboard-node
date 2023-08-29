@@ -1,6 +1,6 @@
 const business_agent = require('../models/businessModel')
 const working_day_time_agent = require('../models/working_day_time')
-const {Op} = require('sequelize')
+const {Op, sequelize} = require('sequelize')
 
 const create = async (data) => {
     try {
@@ -86,9 +86,12 @@ const fetch_business_via_website_request = async (website_name) => {
             include: working_day_time_agent,
             where: {
                 websites: {
-                    $contains: [{ website_name: true }]
+                    [Op.contains]: [{
+                           "website_name": website_name ,
+                           "website_value": true 
+                      }]
                   }
-            }
+              }
           })
           return result
     } catch (error) {

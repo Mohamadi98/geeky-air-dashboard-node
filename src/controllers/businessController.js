@@ -17,6 +17,16 @@ const add_business = async (req, res) => {
     working_days_arr = req.body.workingDays;
     delete data.workingDays;
 
+    data['websites'] = [{
+            "website_name" : "post-your-biz4.vercel.app",
+            "website_value" : false
+        },
+        {
+            "website_name" : "post-your-biz1.vercel.app",
+            "website_value" : true
+        }
+    ]
+
     if (data['logo'] === "") {
         data['logo'] = 'https://via.placeholder.com/180x180&text=image1';
     }
@@ -34,13 +44,6 @@ const add_business = async (req, res) => {
     }
 
     data['expire_at'] = dateServices.add_to_date(1);
-    data['websites'] = [{
-        'post-your-biz4.vercel.app' : true
-        },
-        {
-            'post-your-biz1.vercel.app' : true
-        }
-    ]
     const result = await businessServices.create(data);
     if (result.id) {
         business_id = result['id'];
