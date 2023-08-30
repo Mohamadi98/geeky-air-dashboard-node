@@ -99,6 +99,35 @@ const fetch_business_via_website_request = async (website_name) => {
     }
 }
 
+const filter_businesses_website_request = async (website_name, filter_object) => {
+    try {
+        const where_values = {
+            state: filter_object.state,
+            city1: filter_object.city,
+            city_zip: filter_object.zip,
+            [Op.and]: [
+                {
+                    websites: {
+                        [Op.contains]: [{ website_name: website_name, website_value: true }],
+                    },
+                },
+            ],
+        };
+        Object.keys(where_values).forEach((key) => {
+            if (where_values[key] === undefined) {
+                delete where_values[key];
+            }
+        });
+        const result = await business_agent.findAll({
+            attributes: ['id', 'logo', 'street', 'state', 'city1', 'city2', 'description', 'likes', 'name'], 
+            where: where_values
+          });
+          return result;
+    } catch (error) {
+        return `error filtering the data: ${error}`
+    }
+}
+
 module.exports = {
     create: create,
     fetch_business_by_email_phone: fetch_business_by_email_phone,
@@ -106,5 +135,6 @@ module.exports = {
     fetch_business_by_id: fetch_business_by_id,
     update_business_by_id: update_business_by_id,
     delete_business_by_id: delete_business_by_id,
-    fetch_business_via_website_request: fetch_business_via_website_request
+    fetch_business_via_website_request: fetch_business_via_website_request,
+    filter_businesses_website_request: filter_businesses_website_request
 }

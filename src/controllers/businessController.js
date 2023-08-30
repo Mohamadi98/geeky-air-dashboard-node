@@ -19,7 +19,7 @@ const add_business = async (req, res) => {
 
     data['websites'] = [{
             "website_name" : "post-your-biz4.vercel.app",
-            "website_value" : false
+            "website_value" : true
         },
         {
             "website_name" : "post-your-biz1.vercel.app",
@@ -118,9 +118,17 @@ const update_business = async (req, res) => {
     working_days_arr = req.body.workingDays;
     delete data.workingDays;
 
-    data['logo'] = await firebaseServices.upload_logo(data['logo'], business_name);
-    data['images'] = await firebaseServices.upload_business_images(data['images'], business_name);
-    data['video'] = await firebaseServices.upload_business_video(data['video'], business_name);
+    if (data['logo'] !== "") {
+        data['logo'] = await firebaseServices.upload_logo(data['logo'], business_name);
+    }
+
+    if (data['images'].length !== 0) {
+        data['images'] = await firebaseServices.upload_business_images(data['images'], business_name);
+    }
+
+    if (data['video'] !== "") {
+        data['video'] = await firebaseServices.upload_business_video(data['video'], business_name);
+    }
 
     const result = await businessServices.update_business_by_id(data, id);
     if (result[0] === 1) {
@@ -163,12 +171,25 @@ const Hamdy = async (req, res) => {
     });
 }
 
-businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business);
-businessRouter.get('/get-businesses', get_all_businesses);
+const filter_businesses = async (req, res) => {
+    const {website_name} = req.params;
+    const data = req.body;
+    const result = await businessServices.filter_businesses_website_request(website_name, data);
+    if (result) {
+        res.status(200).json(result);
+    }
+    else {
+        res.status(500).json(result);
+    }
+}
+
+businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business)
+businessRouter.get('/get-businesses', get_all_businesses)
 businessRouter.get('/get-business/:id', get_business)
 businessRouter.put('/update-business/:id', admin_active_check.check_active, update_business)
 businessRouter.delete('/delete-business/:id', admin_active_check.check_active, delete_business)
 businessRouter.get('/get-businesses-website-request/:website_name', get_businesses_per_website_request)
-businessRouter.post('/hamdy', Hamdy);
+businessRouter.post('/filter-business-website-request/:website_name', filter_businesses)
+businessRouter.post('/hamdy', Hamdy)
 
 module.exports = businessRouter
