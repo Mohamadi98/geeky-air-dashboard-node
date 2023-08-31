@@ -16,6 +16,7 @@ const add_business = async (req, res) => {
     const business_name = req.body.name;
     working_days_arr = req.body.workingDays;
     delete data.workingDays;
+    data['name'] = data['name'].toLowerCase();
 
     data['websites'] = [{
             "website_name" : "post-your-biz4.vercel.app",
