@@ -163,17 +163,10 @@ const get_businesses_per_website_request = async (req, res) => {
     }
 }
 
-const Hamdy = async (req, res) => {
-    const image = req.body.image;
-    const response = await firebaseServices.uploadBase64Image(image);
-    res.status(200).json({
-        response
-    });
-}
-
 const filter_businesses = async (req, res) => {
     const {website_name} = req.params;
     const data = req.body;
+    console.log(data);
     const result = await businessServices.filter_businesses_website_request(website_name, data);
     if (result) {
         res.status(200).json(result);
@@ -183,6 +176,14 @@ const filter_businesses = async (req, res) => {
     }
 }
 
+const Mohamadi = async (req, res) => {
+    const image = req.body.image;
+    const response = await firebaseServices.uploadBase64Image(image);
+    res.status(200).json({
+        response
+    });
+}
+
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business)
 businessRouter.get('/get-businesses', get_all_businesses)
 businessRouter.get('/get-business/:id', get_business)
@@ -190,6 +191,6 @@ businessRouter.put('/update-business/:id', admin_active_check.check_active, upda
 businessRouter.delete('/delete-business/:id', admin_active_check.check_active, delete_business)
 businessRouter.get('/get-businesses-website-request/:website_name', get_businesses_per_website_request)
 businessRouter.post('/filter-business-website-request/:website_name', filter_businesses)
-businessRouter.post('/hamdy', Hamdy)
+businessRouter.post('/Mohamadi', Mohamadi)
 
 module.exports = businessRouter
