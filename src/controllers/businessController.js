@@ -118,6 +118,7 @@ const update_business = async (req, res) => {
     const business_name = req.body.name;
     working_days_arr = req.body.workingDays;
     delete data.workingDays;
+    data['name'] = data['name'].toLowerCase();
 
     if (data['logo'] !== "") {
         data['logo'] = await firebaseServices.upload_logo(data['logo'], business_name);
@@ -167,7 +168,6 @@ const get_businesses_per_website_request = async (req, res) => {
 const filter_businesses = async (req, res) => {
     const {website_name} = req.params;
     const data = req.body;
-    console.log(data);
     const result = await businessServices.filter_businesses_website_request(website_name, data);
     if (result) {
         res.status(200).json(result);
