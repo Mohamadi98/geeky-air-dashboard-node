@@ -135,6 +135,7 @@ const update_business = async (req, res) => {
     }
 
     const result = await businessServices.update_business_by_id(data, id);
+    console.log(result);
     if (result[0] === 1) {
         converted_working_days = transformArray(working_days_arr, id);
         const result2 = await working_day_time_services.update(converted_working_days, id);
