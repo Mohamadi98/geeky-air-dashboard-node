@@ -45,7 +45,6 @@ const add_business = async (req, res) => {
     }
 
     // data['expire_at'] = dateServices.add_to_date(1);
-    data['expire_at'] = data['expire_at'].replace(/\//g, "-");
     const result = await businessServices.create(data);
     if (result.id) {
         business_id = result['id'];
