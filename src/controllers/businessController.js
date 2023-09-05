@@ -7,6 +7,7 @@ const transformArray = require('../services/convert_working_days_array')
 const working_day_time_services = require('../services/working_day_time_services')
 const dateServices = require('../services/dateServices')
 const firebaseServices = require('../services/firebase_initialization')
+const s3Services = require('../services/awsS3Services')
 
 dotenv.config();
 const businessRouter = express.Router();
@@ -178,8 +179,8 @@ const filter_businesses = async (req, res) => {
 }
 
 const Mohamadi = async (req, res) => {
-    const image = req.body.image;
-    const response = await firebaseServices.uploadBase64Image(image);
+    const images = req.body.images;
+    const response = await s3Services.upload_business_image_to_s3('myBusiness', images);
     res.status(200).json({
         response
     });
