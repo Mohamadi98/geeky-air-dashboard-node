@@ -44,7 +44,9 @@ const add_business = async (req, res) => {
         data['video'] = await firebaseServices.upload_business_video(data['video'], business_name);
     }
 
-    // data['expire_at'] = dateServices.add_to_date(1);
+    if (data['expire_at'] === ""){
+        data['expire_at'] = dateServices.add_to_date(1);
+    }
     const result = await businessServices.create(data);
     if (result.id) {
         business_id = result['id'];
