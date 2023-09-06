@@ -151,9 +151,16 @@ const update_business = async (req, res) => {
             });
         }
     }
-    else {
+    
+    else if (result[0] === 0) {
         res.status(400).json({
-            'message': 'NO business associated with this id'
+            'message': 'No business associated with this id'
+        });
+    }
+    
+    else {
+        res.status(500).json({
+            result
         });
     }
 }
@@ -185,7 +192,7 @@ const Mohamadi = async (req, res) => {
     const video = req.body.video;
     const response = await s3Services.upload_video_to_s3(video, 'testVideo2');
     res.status(200).json({
-        response
+        response: video
     });
 }
 
@@ -196,6 +203,6 @@ businessRouter.put('/update-business/:id', admin_active_check.check_active, upda
 businessRouter.delete('/delete-business/:id', admin_active_check.check_active, delete_business)
 businessRouter.get('/get-businesses-website-request/:website_name', get_businesses_per_website_request)
 businessRouter.post('/filter-business-website-request/:website_name', filter_businesses)
-businessRouter.post('/Mohamadi', Mohamadi)
+businessRouter.post('/Mohamadi', upload.single('video'), Mohamadi)
 
 module.exports = businessRouter
