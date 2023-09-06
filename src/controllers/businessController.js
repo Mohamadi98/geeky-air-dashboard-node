@@ -7,7 +7,6 @@ const transformArray = require('../services/convert_working_days_array')
 const working_day_time_services = require('../services/working_day_time_services')
 const dateServices = require('../services/dateServices')
 const firebaseServices = require('../services/firebase_initialization')
-const s3Services = require('../services/awsS3Services')
 const awsS3Services = require('../services/awsS3Services')
 
 dotenv.config();
@@ -190,7 +189,7 @@ const filter_businesses = async (req, res) => {
 
 const Mohamadi = async (req, res) => {
     const video = req.body.video;
-    const response = await s3Services.upload_video_to_s3(video, 'testVideo2');
+    const response = await awsS3Services.upload_video_to_s3(video, 'testVideo2');
     res.status(200).json({
         response: video
     });
@@ -203,6 +202,6 @@ businessRouter.put('/update-business/:id', admin_active_check.check_active, upda
 businessRouter.delete('/delete-business/:id', admin_active_check.check_active, delete_business)
 businessRouter.get('/get-businesses-website-request/:website_name', get_businesses_per_website_request)
 businessRouter.post('/filter-business-website-request/:website_name', filter_businesses)
-businessRouter.post('/Mohamadi', upload.single('video'), Mohamadi)
+businessRouter.post('/Mohamadi', Mohamadi)
 
 module.exports = businessRouter
