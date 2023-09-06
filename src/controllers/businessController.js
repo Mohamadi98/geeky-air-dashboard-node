@@ -191,6 +191,7 @@ const filter_businesses = async (req, res) => {
 
 const Mohamadi = async (req, res) => {
     const video = req.file.buffer;
+    console.log(video);
     res.status(200).json({
         response: video
     });
