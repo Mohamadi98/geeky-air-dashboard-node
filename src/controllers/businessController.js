@@ -7,6 +7,9 @@ const transformArray = require('../services/convert_working_days_array')
 const working_day_time_services = require('../services/working_day_time_services')
 const dateServices = require('../services/dateServices')
 const firebaseServices = require('../services/firebase_initialization')
+const multer = require('multer');
+const storage = multer.memoryStorage(); 
+const upload = multer({ storage });
 
 dotenv.config();
 const businessRouter = express.Router();
@@ -187,10 +190,9 @@ const filter_businesses = async (req, res) => {
 }
 
 const Mohamadi = async (req, res) => {
-    const image = req.body.image;
-    const response = await firebaseServices.uploadBase64Image(image);
+    const video = req.file.buffer;
     res.status(200).json({
-        response
+        response: video
     });
 }
 
@@ -201,6 +203,6 @@ businessRouter.put('/update-business/:id', admin_active_check.check_active, upda
 businessRouter.delete('/delete-business/:id', admin_active_check.check_active, delete_business)
 businessRouter.get('/get-businesses-website-request/:website_name', get_businesses_per_website_request)
 businessRouter.post('/filter-business-website-request/:website_name', filter_businesses)
-businessRouter.post('/Mohamadi', Mohamadi)
+businessRouter.post('/Mohamadi', upload.single('video'), Mohamadi)
 
 module.exports = businessRouter
