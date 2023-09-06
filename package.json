@@ -17,6 +17,8 @@
     "nodemon": "^3.0.1"
   },
   "dependencies": {
+    "@aws-sdk/lib-storage": "^3.405.0",
+    "aws-sdk": "^2.1450.0",
     "cors": "^2.8.5",
     "date-fns": "^2.30.0",
     "db-migrate": "^0.11.13",

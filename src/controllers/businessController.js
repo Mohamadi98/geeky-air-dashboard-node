@@ -7,9 +7,8 @@ const transformArray = require('../services/convert_working_days_array')
 const working_day_time_services = require('../services/working_day_time_services')
 const dateServices = require('../services/dateServices')
 const firebaseServices = require('../services/firebase_initialization')
-const multer = require('multer');
-const storage = multer.memoryStorage(); 
-const upload = multer({ storage });
+const s3Services = require('../services/awsS3Services')
+const awsS3Services = require('../services/awsS3Services')
 
 dotenv.config();
 const businessRouter = express.Router();
@@ -36,15 +35,15 @@ const add_business = async (req, res) => {
     }
 
     else {
-        data['logo'] = await firebaseServices.upload_logo(data['logo'], business_name);
+        data['logo'] = await awsS3Services.upload_logo_to_s3(data['logo'], business_name);
     }
 
     if (data['images'].length !== 0) {
-        data['images'] = await firebaseServices.upload_business_images(data['images'], business_name);
+        data['images'] = await awsS3Services.upload_business_image_to_s3(business_name, data['images']);
     }
 
     if (data['video'] !== "") {
-        data['video'] = await firebaseServices.upload_business_video(data['video'], business_name);
+        data['video'] = await awsS3Services.upload_video_to_s3(data['video'], business_name);
     }
 
     if (data['expire_at'] === ""){
@@ -126,15 +125,15 @@ const update_business = async (req, res) => {
     data['name'] = data['name'].toLowerCase();
 
     if (data['logo'] !== "") {
-        data['logo'] = await firebaseServices.upload_logo(data['logo'], business_name);
+        data['logo'] = await awsS3Services.upload_logo_to_s3(data['logo'], business_name);
     }
 
     if (data['images'].length !== 0) {
-        data['images'] = await firebaseServices.upload_business_images(data['images'], business_name);
+        data['images'] = await awsS3Services.upload_business_image_to_s3(business_name, data['images']);
     }
 
     if (data['video'] !== "") {
-        data['video'] = await firebaseServices.upload_business_video(data['video'], business_name);
+        data['video'] = await awsS3Services.upload_video_to_s3(data['video'], business_name);
     }
 
     const result = await businessServices.update_business_by_id(data, id);
@@ -190,8 +189,8 @@ const filter_businesses = async (req, res) => {
 }
 
 const Mohamadi = async (req, res) => {
-    const video = req.file.buffer;
-    console.log(video);
+    const video = req.body.video;
+    const response = await s3Services.upload_video_to_s3(video, 'testVideo2');
     res.status(200).json({
         response: video
     });

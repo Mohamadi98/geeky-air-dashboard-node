@@ -6,6 +6,7 @@ const check_super_admin = require('../middlewares/check_if_superadmin')
 const hash_functions = require('../services/hashingServices')
 const tokenServices = require('../services/tokenServices')
 const firebaseServices = require('../services/firebase_initialization')
+const s3Services = require('../services/awsS3Services')
 
 dotenv.config();
 
@@ -23,7 +24,7 @@ const add_admin = async (req, res) => {
           active = false;
      }
 
-     profile_image = await firebaseServices.upload_admin_image(profile_image, username);
+     profile_image = await s3Services.upload_admin_image_to_s3(profile_image, username);
      const hashed_password = await hash_functions.hash_password(password)
      const data = {
           username: username,
