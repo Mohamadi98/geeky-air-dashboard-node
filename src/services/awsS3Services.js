@@ -96,7 +96,6 @@ const upload_video_to_s3 = async (base64Video, businessName) => {
   }
     const split_on_semicolon = base64Video.split(';')[0];
     const video_extension = split_on_semicolon.split('/')[1];
-    console.log(video_extension);
     const modified_base64 = base64Video.split(',')[1];
     const s3 = new AWS.S3();
     const params = {
