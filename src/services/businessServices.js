@@ -143,18 +143,20 @@ const fetch_businesses_by_date = async (targetDate) => {
     }
 }
 
-const update_websites_permission = async (id, updatedPermissions) => {
+const update_websites_permission = async (idArray, updatedPermissions) => {
     try {
         const result = await business_agent.update(updatedPermissions,
             {
-                where: { 'id': id }
+                where: { 
+                    id: idArray 
+                }
             }
         )
         return result;
 
     } catch (error) {
 
-        return `error turning off website permission`
+        return `error updating website permission: ${error}`
     }
 }
 
