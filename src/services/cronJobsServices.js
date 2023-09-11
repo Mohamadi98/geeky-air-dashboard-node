@@ -23,10 +23,7 @@ const job1 = cronJob.schedule('* * * * *', async () => {
         ]
         }
         const result2 = await businessServices.update_websites_permission(idArray, permissions);
-        if (result2[0] === 0) {
-            console.log('cronJob1 finished execution - No updates');
-        }
-        else if(result2[0]) {
+        if(result2[0]) {
             console.log('cronJob1 finished execution - Rows updated');
         }
         else {
@@ -63,10 +60,7 @@ const job3 = cronJob.schedule('*/3 * * * *', async () => {
             ]
             }
             const result2 = await businessServices.update_websites_permission(idArray, permissions);
-            if (result2[0] === 0) {
-                console.log('cronJob3 finished execution - No updates');
-            }
-            else if(result2[0]) {
+            if(result2[0]) {
                 console.log('cronJob3 finished execution - Rows updated');
             }
             else {
@@ -103,10 +97,45 @@ const job5 = cronJob.schedule('*/5 * * * *', async () => {
             ]
             }
             const result2 = await businessServices.update_websites_permission(idArray, permissions);
-            if (result2[0] === 0) {
-                console.log('cronJob5 finished execution - No updates');
+            if(result2[0]) {
+                console.log('cronJob5 finished execution - Rows updated');
             }
-            else if(result2[0]) {
+            else {
+                console.log(`cronJob5 finished execution, but there was an error: ${result2}`);
+            }
+        }
+        else {
+            console.log('cronJob5 finished execution - No results found');
+        }
+        } catch (error) {
+            console.error('Error executing cronJob5:', error);
+        }
+});
+
+const job0 = cronJob.schedule('0 0 * * *', async () => {
+    try {
+        console.log('cronJob0 started execution');
+        const idArray = [];
+        const date = new Date();
+        const result = await businessServices.fetch_businesses_by_date(date);
+        if (result.length > 0) {
+            for(const obj of result) {
+                idArray.push(obj['id']);
+            }
+            const permissions = {
+                'websites': [{
+                    "website_name" : "post-your-biz4.vercel.app",
+                    "website_value" : false
+                },
+                {
+                    "website_name" : "post-your-biz1.vercel.app",
+                    "website_value" : false
+                }
+            ]
+            }
+            const result2 = await businessServices.update_websites_permission(idArray, permissions);
+            console.log(result2);
+            if(result2[0]) {
                 console.log('cronJob5 finished execution - Rows updated');
             }
             else {
