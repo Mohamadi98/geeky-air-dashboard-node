@@ -136,14 +136,14 @@ const job0 = cronJob.schedule('0 0 * * *', async () => {
             const result2 = await businessServices.update_websites_permission(idArray, permissions);
             console.log(result2);
             if(result2[0]) {
-                console.log('cronJob5 finished execution - Rows updated');
+                console.log('cronJob0 finished execution - Rows updated');
             }
             else {
-                console.log(`cronJob5 finished execution, but there was an error: ${result2}`);
+                console.log(`cronJob0 finished execution, but there was an error: ${result2}`);
             }
         }
         else {
-            console.log('cronJob5 finished execution - No results found');
+            console.log('cronJob0 finished execution - No results found');
         }
         } catch (error) {
             console.error('Error executing cronJob5:', error);
