@@ -146,7 +146,7 @@ const job0 = cronJob.schedule('0 0 * * *', async () => {
             console.log('cronJob0 finished execution - No results found');
         }
         } catch (error) {
-            console.error('Error executing cronJob5:', error);
+            console.error('Error executing cronJob0:', error);
         }
 });
 
