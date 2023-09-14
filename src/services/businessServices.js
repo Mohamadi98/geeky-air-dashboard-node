@@ -128,6 +128,38 @@ const filter_businesses_website_request = async (website_name, filter_object) =>
     }
 }
 
+const fetch_businesses_by_date = async (targetDate) => {
+    try {
+        const result = await business_agent.findAll({
+            attributes: ['id'],
+            where: {
+                'expire_at': targetDate
+            }
+        });
+        return result;
+
+    } catch (error) {
+        return `error showing all businesses: ${error}`
+    }
+}
+
+const update_websites_permission = async (idArray, updatedPermissions) => {
+    try {
+        const result = await business_agent.update(updatedPermissions,
+            {
+                where: { 
+                    id: idArray 
+                }
+            }
+        )
+        return result;
+
+    } catch (error) {
+
+        return `error updating website permission: ${error}`
+    }
+}
+
 module.exports = {
     create: create,
     fetch_business_by_email_phone: fetch_business_by_email_phone,
@@ -136,5 +168,7 @@ module.exports = {
     update_business_by_id: update_business_by_id,
     delete_business_by_id: delete_business_by_id,
     fetch_business_via_website_request: fetch_business_via_website_request,
-    filter_businesses_website_request: filter_businesses_website_request
+    filter_businesses_website_request: filter_businesses_website_request,
+    fetch_businesses_by_date: fetch_businesses_by_date,
+    update_websites_permission:update_websites_permission
 }

@@ -7,6 +7,7 @@ const businessRouter = require('./controllers/businessController')
 const adminServices = require('../src/services/adminServices')
 const cors = require('cors');
 const morgan = require('morgan')
+ // const cronJobsServices = require('./services/cronJobsServices')
 
 
 dotenv.config();
@@ -23,6 +24,7 @@ const PORT = process.env.PORT;
 app.get('/', (req, res) => {
     res.send('server started');
 });
+
 app.use(adminRouter);
 app.use(businessRouter);
 
