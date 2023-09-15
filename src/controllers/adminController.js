@@ -167,6 +167,9 @@ const admin_login = async (req, res) => {
                if (result['role'] === 'superadmin') {
                     res.status(200).json({
                          'message': 'superadmin user',
+                         'username': result['username'],
+                         'id': result['id'],
+                         'profile_image': result['profile_image'],
                          'token': token
                     });
                }

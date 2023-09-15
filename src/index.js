@@ -4,6 +4,7 @@ const dotenv = require('dotenv')
 const bodyParser = require('body-parser')
 const adminRouter = require('./controllers/adminController')
 const businessRouter = require('./controllers/businessController')
+const postRouter = require('../src/controllers/postController')
 const adminServices = require('../src/services/adminServices')
 const cors = require('cors');
 const morgan = require('morgan')
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 
 app.use(adminRouter);
 app.use(businessRouter);
+app.use(postRouter);
 
 adminServices.super_admin_initialize();
 
