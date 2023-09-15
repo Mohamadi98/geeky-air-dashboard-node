@@ -176,6 +176,9 @@ const admin_login = async (req, res) => {
                else {
                     res.status(200).json({
                          'message': 'admin user',
+                         'username': result['username'],
+                         'id': result['id'],
+                         'profile_image': result['profile_image'],
                          'token': token
                     });
                }
