@@ -1,4 +1,5 @@
 const { addYears } = require('date-fns')
+const moment = require('moment-timezone')
 
 const parseDate = (dateString) => {
     const parts = dateString.split('-');
@@ -18,6 +19,13 @@ const add_to_date = (value) => {
     return parseDate(formattedDate);
 }
 
+const convert_date_timezone = (date) => {
+    const targetTimezone = 'Africa/Cairo';
+    const formattedDatetime = moment(tempDate).tz(targetTimezone).format('YYYY-MM-DD HH:mm:ss');
+    return formattedDatetime;
+}
+
 module.exports = {
-    add_to_date: add_to_date
+    add_to_date: add_to_date,
+    convert_date_timezone: convert_date_timezone
 }

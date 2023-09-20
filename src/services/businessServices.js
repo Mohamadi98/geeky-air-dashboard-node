@@ -160,6 +160,17 @@ const update_websites_permission = async (idArray, updatedPermissions) => {
     }
 }
 
+const fetch_businesses_identifiers = async () => {
+    try {
+        const result = await business_agent.findAll({
+            attributes: ['id', 'logo', 'name']
+        });
+        return result;
+    } catch (error) {
+        return `error showing all businesses: ${error}`
+    }
+}
+
 module.exports = {
     create: create,
     fetch_business_by_email_phone: fetch_business_by_email_phone,
@@ -170,5 +181,6 @@ module.exports = {
     fetch_business_via_website_request: fetch_business_via_website_request,
     filter_businesses_website_request: filter_businesses_website_request,
     fetch_businesses_by_date: fetch_businesses_by_date,
-    update_websites_permission:update_websites_permission
+    update_websites_permission:update_websites_permission,
+    fetch_businesses_identifiers: fetch_businesses_identifiers
 }

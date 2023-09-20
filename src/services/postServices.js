@@ -8,7 +8,7 @@ const create = async (data) => {
         console.log(data);
         const result = await post_agent.create(data);
         console.log('we are in post services');
-        console.log(result);
+        console.log(result['scheduled_at']);
         return result;
     } catch (error) {
         return `error creating a post: ${error}`

@@ -270,6 +270,20 @@ const playGround = async (req, res) => {
     }
 }
 
+const get_businesses_identifiers = async (req, res) => {
+    const result = await businessServices.fetch_businesses_identifiers();
+    if (result) {
+        res.status(200).json({
+            result
+        });
+    }
+    else {
+        res.status(400).json({
+            'message': 'No businesses found'
+        });
+    }
+}
+
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business)
 businessRouter.get('/get-businesses', get_all_businesses)
 businessRouter.get('/get-business/:id', get_business)
@@ -277,6 +291,7 @@ businessRouter.put('/update-business/:id', admin_active_check.check_active, upda
 businessRouter.delete('/delete-business/:id', admin_active_check.check_active, delete_business)
 businessRouter.get('/get-businesses-website-request/:website_name', get_businesses_per_website_request)
 businessRouter.post('/filter-business-website-request/:website_name', filter_businesses)
+businessRouter.get('/get-businesses-identifiers', get_businesses_identifiers)
 businessRouter.post('/Mohamadi', Mohamadi)
 businessRouter.get('/playGround', playGround)
 
