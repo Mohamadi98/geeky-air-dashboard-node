@@ -296,7 +296,7 @@ businessRouter.delete('/delete-business/:id', admin_active_check.check_active, d
 businessRouter.get('/get-businesses-website-request/:website_name', get_businesses_per_website_request)
 businessRouter.post('/filter-business-website-request/:website_name', filter_businesses)
 businessRouter.get('/get-businesses-identifiers', get_businesses_identifiers)
-businessRouter.post('/Mohamadi', Mohamadi)
-businessRouter.get('/playGround', playGround)
+// businessRouter.post('/Mohamadi', Mohamadi)
+// businessRouter.get('/playGround', playGround)
 
 module.exports = businessRouter
