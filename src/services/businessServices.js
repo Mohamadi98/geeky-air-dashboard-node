@@ -119,7 +119,7 @@ const filter_businesses_website_request = async (website_name, filter_object) =>
             }
         });
         const result = await business_agent.findAll({
-            attributes: ['id', 'logo', 'street', 'state', 'city1', 'city2', 'description', 'likes', 'name'], 
+            attributes: ['id', 'logo', 'images', 'street', 'state', 'city1', 'city2', 'description', 'likes', 'name'], 
             where: where_values
           });
           return result;
