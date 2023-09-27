@@ -122,7 +122,6 @@ const filter_businesses_website_request = async (website_name, filter_object) =>
             attributes: ['id', 'logo', 'images', 'phone_number', 'street', 'state', 'city1', 'city2', 'description', 'likes', 'name'], 
             where: where_values
           });
-          console.log(`this is the where_values: ${where_values}`);
           return result;
     } catch (error) {
         return `error filtering the data: ${error}`

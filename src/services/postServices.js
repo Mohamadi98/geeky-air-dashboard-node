@@ -5,6 +5,7 @@ const {Op, sequelize} = require('sequelize')
 const create = async (data) => {
     try {
         const result = await post_agent.create(data);
+        console.log(result);
         return result;
     } catch (error) {
         return `error creating a post: ${error}`

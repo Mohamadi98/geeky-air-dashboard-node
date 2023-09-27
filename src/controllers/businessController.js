@@ -182,7 +182,6 @@ const get_businesses_per_website_request = async (req, res) => {
 const filter_businesses = async (req, res) => {
     const {website_name} = req.params;
     const data = req.body;
-    console.log(`request object: ${data}`);
     const result = await businessServices.filter_businesses_website_request(website_name, data);
     if (result) {
         res.status(200).json(result);
@@ -289,6 +288,13 @@ const get_businesses_identifiers = async (req, res) => {
     }
 }
 
+const Mohamadi = async (req, res) => {
+    date_now = new Date();
+    res.status(200).json({
+        'response': date_now
+    })
+}
+
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business)
 businessRouter.get('/get-businesses', get_all_businesses)
 businessRouter.get('/get-business/:id', get_business)
@@ -297,7 +303,7 @@ businessRouter.delete('/delete-business/:id', admin_active_check.check_active, d
 businessRouter.get('/get-businesses-website-request/:website_name', get_businesses_per_website_request)
 businessRouter.post('/filter-business-website-request/:website_name', filter_businesses)
 businessRouter.get('/get-businesses-identifiers', get_businesses_identifiers)
-// businessRouter.post('/Mohamadi', Mohamadi)
+businessRouter.get('/Mohamadi', Mohamadi)
 // businessRouter.get('/playGround', playGround)
 
 module.exports = businessRouter
