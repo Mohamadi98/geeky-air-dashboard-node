@@ -22,20 +22,29 @@ const post_agent = db_client.define('post', {
       video: {
         type: DataTypes.STRING
       },
-      text: {
+      content: {
         type: DataTypes.STRING
       },
-      scheduled_at: {
-        type: DataTypes.DATE
-      },
-      active: {
-        type: DataTypes.BOOLEAN,
+      status: {
+        type: DataTypes.STRING,
       },
       type: {
         type: DataTypes.STRING
       },
+      dates: {
+        type: DataTypes.ARRAY(DataTypes.DATE)
+      },
+      italic: {
+        type: DataTypes.BOOLEAN
+      },
+      bold: {
+        type: DataTypes.BOOLEAN
+      },
       websites: {
         type: DataTypes.JSONB
+      },
+      integrations: {
+        type: DataTypes.ARRAY(DataTypes.STRING)
       },
       expire_at: {
         type: DataTypes.DATE

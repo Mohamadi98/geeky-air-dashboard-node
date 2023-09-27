@@ -26,7 +26,11 @@ const add_business = async (req, res) => {
         {
             "website_name" : "post-your-biz1.vercel.app",
             "website_value" : true
-        }
+        },
+        {
+            "website_name" : "post-your-biz2.vercel.app",
+            "website_value" : true
+        },
     ]
 
     if (data['logo'] === "") {
@@ -187,88 +191,88 @@ const filter_businesses = async (req, res) => {
     }
 }
 
-const Mohamadi = async (req, res) => {
-    const id = req.body.id;
-    const flag = req.body.flag;
-    let permissions;
-    if (flag === true) {
-        permissions = {
-            'websites': [{
-                "website_name" : "post-your-biz4.vercel.app",
-                "website_value" : true
-            },
-            {
-                "website_name" : "post-your-biz1.vercel.app",
-                "website_value" : true
-            }
-        ]
-        }
-    }
-    else {
-        permissions = {
-            'websites': [{
-                "website_name" : "post-your-biz4.vercel.app",
-                "website_value" : false
-            },
-            {
-                "website_name" : "post-your-biz1.vercel.app",
-                "website_value" : false
-            }
-        ]
-        }
-    }
+// const Mohamadi = async (req, res) => {
+//     const id = req.body.id;
+//     const flag = req.body.flag;
+//     let permissions;
+//     if (flag === true) {
+//         permissions = {
+//             'websites': [{
+//                 "website_name" : "post-your-biz4.vercel.app",
+//                 "website_value" : true
+//             },
+//             {
+//                 "website_name" : "post-your-biz1.vercel.app",
+//                 "website_value" : true
+//             }
+//         ]
+//         }
+//     }
+//     else {
+//         permissions = {
+//             'websites': [{
+//                 "website_name" : "post-your-biz4.vercel.app",
+//                 "website_value" : false
+//             },
+//             {
+//                 "website_name" : "post-your-biz1.vercel.app",
+//                 "website_value" : false
+//             }
+//         ]
+//         }
+//     }
 
-    const result = await businessServices.update_websites_permission(id, permissions);
-    console.log(result);
-    res.status(200).json({
-        'message': 'done'
-    });
-}
+//     const result = await businessServices.update_websites_permission(id, permissions);
+//     console.log(result);
+//     res.status(200).json({
+//         'message': 'done'
+//     });
+// }
 
-const playGround = async (req, res) => {
-    const idArray = [];
-    const date = new Date('2023-12-21');
-    const result = await businessServices.fetch_businesses_by_date(date);
-    if (result.length > 0) {
-        for(const obj of result) {
-            idArray.push(obj['id']);
-        }
-        console.log(idArray);
-        const permissions = {
-            'websites': [{
-                "website_name" : "post-your-biz4.vercel.app",
-                "website_value" : false
-            },
-            {
-                "website_name" : "post-your-biz1.vercel.app",
-                "website_value" : false
-            }
-        ]
-        }
-        const result2 = await businessServices.update_websites_permission(idArray, permissions);
-        if (result2[0] === 0) {
-            res.status(400).json({
-                'message': 'the ids were not found in the database'
-            });
-        }
-        else if(result2[0]) {
-            res.status(200).json({
-                'message': 'websites permissions updated successfuly!'
-            });
-        }
-        else {
-            res.status(500).json({
-                result2
-            });
-        }
+// const playGround = async (req, res) => {
+//     const idArray = [];
+//     const date = new Date('2023-12-21');
+//     const result = await businessServices.fetch_businesses_by_date(date);
+//     if (result.length > 0) {
+//         for(const obj of result) {
+//             idArray.push(obj['id']);
+//         }
+//         console.log(idArray);
+//         const permissions = {
+//             'websites': [{
+//                 "website_name" : "post-your-biz4.vercel.app",
+//                 "website_value" : false
+//             },
+//             {
+//                 "website_name" : "post-your-biz1.vercel.app",
+//                 "website_value" : false
+//             }
+//         ]
+//         }
+//         const result2 = await businessServices.update_websites_permission(idArray, permissions);
+//         if (result2[0] === 0) {
+//             res.status(400).json({
+//                 'message': 'the ids were not found in the database'
+//             });
+//         }
+//         else if(result2[0]) {
+//             res.status(200).json({
+//                 'message': 'websites permissions updated successfuly!'
+//             });
+//         }
+//         else {
+//             res.status(500).json({
+//                 result2
+//             });
+//         }
 
-    }
-    else {
-        res.status(400).json({
-            'message': 'No businesses expires at this date'
-        })
-    }
-}
+//     }
+//     else {
+//         res.status(400).json({
+//             'message': 'No businesses expires at this date'
+//         })
+//     }
+// }
 
 const get_businesses_identifiers = async (req, res) => {
     const result = await businessServices.fetch_businesses_identifiers();
@@ -292,7 +296,7 @@ businessRouter.delete('/delete-business/:id', admin_active_check.check_active, d
 businessRouter.get('/get-businesses-website-request/:website_name', get_businesses_per_website_request)
 businessRouter.post('/filter-business-website-request/:website_name', filter_businesses)
 businessRouter.get('/get-businesses-identifiers', get_businesses_identifiers)
-businessRouter.post('/Mohamadi', Mohamadi)
-businessRouter.get('/playGround', playGround)
+// businessRouter.post('/Mohamadi', Mohamadi)
+// businessRouter.get('/playGround', playGround)
 
 module.exports = businessRouter
