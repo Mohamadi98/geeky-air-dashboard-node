@@ -33,8 +33,11 @@ const add_post = async (req, res) => {
                 "website_name" : "post-your-biz2.vercel.app",
                 "website_value" : true
             },
-        ]
+        ],
+            expire_at: request_data['expire_at'],
+            integrations: request_data['integrations'],
         }
+        
     }
 }
 

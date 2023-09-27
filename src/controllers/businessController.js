@@ -182,6 +182,7 @@ const get_businesses_per_website_request = async (req, res) => {
 const filter_businesses = async (req, res) => {
     const {website_name} = req.params;
     const data = req.body;
+    console.log(`request object: ${data}`);
     const result = await businessServices.filter_businesses_website_request(website_name, data);
     if (result) {
         res.status(200).json(result);
