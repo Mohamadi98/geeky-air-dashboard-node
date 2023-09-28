@@ -25,7 +25,21 @@ const convert_date_timezone = (date) => {
     return formattedDatetime;
 }
 
+const convert_from_est_to_utc = (date, time) => {
+    const concatDateTime = `${date} ${time}`
+    
+    const date_EST = moment(concatDateTime).tz('America/New_York');
+    const formattedDate = date_EST.format(`YYYY-MM-DDT${time}Z`);
+
+    const utcDate = moment(formattedDate).tz('UTC');
+
+    console.log('we are in date services function');
+    console.log(utcDate);
+    return utcDate;
+}
+
 module.exports = {
     add_to_date: add_to_date,
-    convert_date_timezone: convert_date_timezone
+    convert_date_timezone: convert_date_timezone,
+    convert_from_est_to_utc: convert_from_est_to_utc
 }

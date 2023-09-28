@@ -6,8 +6,8 @@ const businessServices = require('../services/businessServices')
 const transformArray = require('../services/convert_working_days_array')
 const working_day_time_services = require('../services/working_day_time_services')
 const dateServices = require('../services/dateServices')
-const firebaseServices = require('../services/firebase_initialization')
 const awsS3Services = require('../services/awsS3Services')
+const postServices = require('../services/postServices')
 
 dotenv.config();
 const businessRouter = express.Router();
@@ -289,10 +289,26 @@ const get_businesses_identifiers = async (req, res) => {
 }
 
 const Mohamadi = async (req, res) => {
-    date_now = new Date();
+    const date = '2023-09-28';
+    const time = '23:00';
+    const result = dateServices.convert_from_est_to_utc(date, time);
     res.status(200).json({
-        'response': date_now
-    })
+        'response': result
+    });
+}
+
+const playGround = async (req, res) => {
+    const db_response = await postServices.seacrh_by_date();
+    if (db_response.length > 0) {
+        res.status(200).json({
+            'message': db_response
+        });
+    }
+    else {
+        res.status(500).json({
+            db_response
+        });
+    }
 }
 
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business)
@@ -304,6 +320,6 @@ businessRouter.get('/get-businesses-website-request/:website_name', get_business
 businessRouter.post('/filter-business-website-request/:website_name', filter_businesses)
 businessRouter.get('/get-businesses-identifiers', get_businesses_identifiers)
 businessRouter.get('/Mohamadi', Mohamadi)
-// businessRouter.get('/playGround', playGround)
+businessRouter.get('/playGround', playGround)
 
 module.exports = businessRouter
