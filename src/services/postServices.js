@@ -14,25 +14,25 @@ const create = async (data) => {
 
 const show_all_posts = async () => {
     try {
-        const result = await post_agent.findAll({
+        const posts = await post_agent.findAll({
+            include: {
+                model: business_agent,
+                attributes: ['name', 'logo'],
+                required: true, 
+            },
             where: {
-                'status': 'published'
+                status: 'published'
             }
         });
-        return result;
+
+        return posts;
     } catch (error) {
-        return `error showing all businesses: ${error}`
+        return `Error fetching posts with business info: ${error}`;
     }
 }
 
-const seacrh_by_date = async () => {
+const seacrh_by_date = async (dateTime) => {
     try {
-        const date = '2023-09-30';
-        const time = '21:40:25';
-        const dateTime = dateServices.convert_from_est_to_utc(date, time);
-        console.log({dateTime});
-        // const timestamp = dateTime.toISOString().replace('T', ' ').replace('Z', '');
-        // console.log(timestamp);
         const posts = await post_agent.findAll({
             where: post_agent.sequelize.literal(`
                 EXISTS (
