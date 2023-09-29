@@ -101,6 +101,24 @@ const add_post = async (req, res) => {
     }
 }
 
+const get_post = async (req, res) => {
+    const db_response = await postServices.show_all_posts();
+    for (let i = 0; i < db_response.length; i++) {
+        db_response[i].dataValues['postTime'] = dateServices.get_time_difference(db_response[i].dataValues['updated_at']);
+    }
+    if ( db_response.length > 0 ) {
+        res.status(200).json({
+            db_response
+        })
+    }
+    else {
+        res.status(500).json({
+            db_response
+        });
+    }
+}
+
 postRouter.post('/add-post', middlewares.check_active, add_post);
+postRouter.get('/get-all-posts', get_post);
 
 module.exports = postRouter;

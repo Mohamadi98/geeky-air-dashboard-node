@@ -6,10 +6,22 @@ const dateServices = require('../services/dateServices')
 const create = async (data) => {
     try {
         const result = await post_agent.create(data);
-        console.log(result);
         return result;
     } catch (error) {
         return `error creating a post: ${error}`
+    }
+}
+
+const show_all_posts = async () => {
+    try {
+        const result = await post_agent.findAll({
+            where: {
+                'status': 'published'
+            }
+        });
+        return result;
+    } catch (error) {
+        return `error showing all businesses: ${error}`
     }
 }
 
@@ -36,7 +48,25 @@ const seacrh_by_date = async () => {
     }
 }
 
+const update_post = async (post_data, id) => {
+    try {
+        const [affectedRowsCount, affectedRows] = await post_agent.update(post_data,
+            {
+                where: { 'id': id }
+            }
+        )
+        return affectedRowsCount;
+        }
+
+    catch (error) {
+       return `there was an error updating the post: ${error}`
+    }
+}
+
+
 module.exports = {
     create: create,
-    seacrh_by_date: seacrh_by_date
+    seacrh_by_date: seacrh_by_date,
+    show_all_posts: show_all_posts,
+    update_post: update_post
 }

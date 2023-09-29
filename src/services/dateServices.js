@@ -38,8 +38,25 @@ const convert_from_est_to_utc = (date, time) => {
     return utcDate;
 }
 
+const get_time_difference = (timestamp) => {
+//   const timestampDate = new Date(timestamp);
+
+  // Get the current date and time
+  const currentDate = new Date();
+
+  // Calculate the time difference in milliseconds
+  const timeDifferenceMilliseconds = currentDate - timestamp;
+
+  // Calculate the time difference in seconds
+  const timeDifferenceSeconds = Math.floor(timeDifferenceMilliseconds / 1000);
+  const timeDifferenceMinutes = Math.floor(timeDifferenceSeconds / 60);
+
+  return timeDifferenceMinutes;
+}
+
 module.exports = {
     add_to_date: add_to_date,
     convert_date_timezone: convert_date_timezone,
-    convert_from_est_to_utc: convert_from_est_to_utc
+    convert_from_est_to_utc: convert_from_est_to_utc,
+    get_time_difference: get_time_difference
 }
