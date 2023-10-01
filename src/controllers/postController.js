@@ -61,7 +61,7 @@ const add_post = async (req, res) => {
     else if (request_data['type'] === 'scheduled') {
         const date = request_data['schedule_date'];
         const time = request_data['time'];
-        const newDateTime = dateServices.convert_from_est_to_utc(date, time);
+        const newDateTime = dateServices.convert_from_utc_to_est_with_time_and_date(date, time);
 
         const data = {
             business_id: request_data['business_id'],
@@ -105,7 +105,7 @@ const add_post = async (req, res) => {
             const daysOfTheWeek = dateServices.convert_days_arr_to_num_arr(request_data['recurring_on']);
             const everyWeek = request_data['recurring_every'];
             const startingDate = dateServices
-                .convert_from_est_to_utc(request_data['start_date'],
+                .convert_from_utc_to_est_with_time_and_date(request_data['start_date'],
                     request_data['time']);
             const endingDate = request_data['end_date'];
             const dates = recurringServices.createRecurringDatesByWeek(daysOfTheWeek,
@@ -149,7 +149,49 @@ const add_post = async (req, res) => {
             }
         }
         else if (request_data['recurring_for'] === 'month') {
-
+            const daysOfTheMonth = request_data['selected_days'];
+            const everyMonth = request_data['recurring_every'];
+            const endingDate = request_data['end_date'];
+            const time = request_data['time']
+            const dates = recurringServices.createRecurringDatesByMonth(daysOfTheMonth,
+                everyMonth, endingDate, time);
+            
+            const data = {
+                business_id: request_data['business_id'],
+                images: request_data['images'],
+                video: request_data['video'],
+                content: request_data['content'],
+                status: 'scheduled',
+                type: request_data['type'],
+                italic: request_data['italic'],
+                bold: request_data['bold'],
+                integrations: request_data['integrations'],
+                dates: dates,
+                expire_at: endingDate,
+                websites: [{
+                    "website_name": "post-your-biz4.vercel.app",
+                    "website_value": true
+                },
+                {
+                    "website_name": "post-your-biz1.vercel.app",
+                    "website_value": true
+                },
+                {
+                    "website_name": "post-your-biz2.vercel.app",
+                    "website_value": true
+                }],
+            }
+            const db_response = await postServices.create(data);
+            if (db_response.id) {
+                res.status(200).json({
+                    'message': 'post created successfuly!'
+                });
+            }
+            else {
+                res.status(500).json({
+                    db_response
+                });
+            }
         }
         else {
 

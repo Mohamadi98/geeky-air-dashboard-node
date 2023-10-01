@@ -6,11 +6,11 @@ const parseDate = (dateString) => {
     const year = parseInt(parts[0], 10);
     const month = parseInt(parts[1], 10) - 1;
     const day = parseInt(parts[2], 10);
-  
+
     newDate = new Date(year, month, day);
     newFormattedDate = newDate.toISOString().split('T')[0];
     return newDate.toISOString().split('T')[0];
-  }
+}
 
 const add_to_date = (value) => {
     const date = new Date();
@@ -19,27 +19,10 @@ const add_to_date = (value) => {
     return parseDate(formattedDate);
 }
 
-const convert_date_timezone = (date) => {
-    const targetTimezone = 'Africa/Cairo';
-    const formattedDatetime = moment(tempDate).tz(targetTimezone).format('YYYY-MM-DD HH:mm:ss');
-    return formattedDatetime;
-}
-
-const convert_from_est_to_utc = (date, time) => {
-    const concatDateTime = `${date} ${time}`
-    
-    const date_EST = moment(concatDateTime).tz('America/New_York');
-    const formattedDate = date_EST.format(`YYYY-MM-DDT${time}:00Z`);
-
-    const utcDate = moment(formattedDate).tz('UTC');
-
-    return utcDate;
-}
-
 const convert_from_utc_to_est = () => {
     const currentDateTime = new Date();
-    
-    const date_UTC = moment(currentDateTime).tz('UTC');
+
+    const date_UTC = moment.utc(currentDateTime);
 
     const estDate = moment(date_UTC).tz('America/New_York');
 
@@ -48,20 +31,41 @@ const convert_from_utc_to_est = () => {
     return formattedEstDate;
 }
 
+const convert_from_utc_to_est_with_time = (time) => {
+    const currentDateTime = new Date();
+
+    const date_UTC = moment(currentDateTime).tz('UTC');
+    const formattedDate = date_UTC.format(`YYYY-MM-DDT${time}:00Z`);
+
+    const estDate = moment(formattedDate).tz('America/New_York');
+
+    const formattedEstDate = estDate.format('YYYY-MM-DDTHH:mm:ssZ');
+
+    return formattedEstDate;
+}
+
+const convert_from_utc_to_est_with_time_and_date = (date, time) => {
+    const currentDateTime = new Date();
+
+    const date_UTC = moment(currentDateTime).tz('UTC');
+    const formattedDate = date_UTC.format(`${date}T${time}:00Z`);
+
+    const estDate = moment(formattedDate).tz('America/New_York');
+
+    const formattedEstDate = estDate.format('YYYY-MM-DDTHH:mm:ssZ');
+
+    return formattedEstDate;
+}
+
 const get_time_difference = (timestamp) => {
-//   const timestampDate = new Date(timestamp);
+    const currentDate = new Date();
 
-  // Get the current date and time
-  const currentDate = new Date();
+    const timeDifferenceMilliseconds = currentDate - timestamp;
 
-  // Calculate the time difference in milliseconds
-  const timeDifferenceMilliseconds = currentDate - timestamp;
+    const timeDifferenceSeconds = Math.floor(timeDifferenceMilliseconds / 1000);
+    const timeDifferenceMinutes = Math.floor(timeDifferenceSeconds / 60);
 
-  // Calculate the time difference in seconds
-  const timeDifferenceSeconds = Math.floor(timeDifferenceMilliseconds / 1000);
-  const timeDifferenceMinutes = Math.floor(timeDifferenceSeconds / 60);
-
-  return timeDifferenceMinutes;
+    return timeDifferenceMinutes;
 }
 
 const convert_days_arr_to_num_arr = (daysArray) => {
@@ -83,9 +87,9 @@ const convert_days_arr_to_num_arr = (daysArray) => {
 
 module.exports = {
     add_to_date: add_to_date,
-    convert_date_timezone: convert_date_timezone,
-    convert_from_est_to_utc: convert_from_est_to_utc,
     get_time_difference: get_time_difference,
     convert_days_arr_to_num_arr: convert_days_arr_to_num_arr,
-    convert_from_utc_to_est: convert_from_utc_to_est
+    convert_from_utc_to_est: convert_from_utc_to_est,
+    convert_from_utc_to_est_with_time: convert_from_utc_to_est_with_time,
+    convert_from_utc_to_est_with_time_and_date: convert_from_utc_to_est_with_time_and_date
 }

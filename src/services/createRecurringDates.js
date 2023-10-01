@@ -1,3 +1,5 @@
+const dateServices = require('../services/dateServices')
+
 const createRecurringDatesByWeek = (daysOfTheWeek, everyWeek, startingDate, endingDate) => {
   const result = [];
   const eDate = new Date(endingDate);
@@ -22,12 +24,14 @@ const createRecurringDatesByWeek = (daysOfTheWeek, everyWeek, startingDate, endi
   return result;
 };
 
-const createRecurringDatesByMonth = (daysOfTheMonth, everyMonth, endingDate) => {
+const createRecurringDatesByMonth = (daysOfTheMonth, everyMonth, endingDate, time) => {
   const result = [];
   const eDate = new Date(endingDate);
+  const startingDate = dateServices.convert_from_utc_to_est_with_time(time);
 
   daysOfTheMonth.forEach(day => {
-    let date = new Date();
+    
+    let date = new Date(startingDate);
 
     while (date <= eDate) {
       if (date.getDate() === day) {
@@ -45,7 +49,8 @@ const createRecurringDatesByMonth = (daysOfTheMonth, everyMonth, endingDate) => 
 }
 
 module.exports = {
-  createRecurringDatesByWeek: createRecurringDatesByWeek
+  createRecurringDatesByWeek: createRecurringDatesByWeek,
+  createRecurringDatesByMonth: createRecurringDatesByMonth
 }
 
 
