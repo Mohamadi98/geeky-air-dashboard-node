@@ -29,13 +29,23 @@ const convert_from_est_to_utc = (date, time) => {
     const concatDateTime = `${date} ${time}`
     
     const date_EST = moment(concatDateTime).tz('America/New_York');
-    const formattedDate = date_EST.format(`YYYY-MM-DDT${time}Z`);
+    const formattedDate = date_EST.format(`YYYY-MM-DDT${time}:00Z`);
 
     const utcDate = moment(formattedDate).tz('UTC');
 
-    console.log('we are in date services function');
-    console.log(utcDate);
     return utcDate;
+}
+
+const convert_from_utc_to_est = () => {
+    const currentDateTime = new Date();
+    
+    const date_UTC = moment(currentDateTime).tz('UTC');
+
+    const estDate = moment(date_UTC).tz('America/New_York');
+
+    const formattedEstDate = estDate.format('YYYY-MM-DDTHH:mm:ssZ');
+
+    return formattedEstDate;
 }
 
 const get_time_difference = (timestamp) => {
@@ -54,9 +64,28 @@ const get_time_difference = (timestamp) => {
   return timeDifferenceMinutes;
 }
 
+const convert_days_arr_to_num_arr = (daysArray) => {
+    const numArray = [];
+    const map = {
+        'su': 0,
+        'mo': 1,
+        'tu': 2,
+        'we': 3,
+        'th': 4,
+        'fr': 5,
+        'sa': 6
+    }
+    for (const day of daysArray) {
+        numArray.push(map[day]);
+    }
+    return numArray;
+}
+
 module.exports = {
     add_to_date: add_to_date,
     convert_date_timezone: convert_date_timezone,
     convert_from_est_to_utc: convert_from_est_to_utc,
-    get_time_difference: get_time_difference
+    get_time_difference: get_time_difference,
+    convert_days_arr_to_num_arr: convert_days_arr_to_num_arr,
+    convert_from_utc_to_est: convert_from_utc_to_est
 }

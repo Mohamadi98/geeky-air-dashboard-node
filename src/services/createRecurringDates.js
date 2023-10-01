@@ -44,6 +44,10 @@ const createRecurringDatesByMonth = (daysOfTheMonth, everyMonth, endingDate) => 
   return result;
 }
 
+module.exports = {
+  createRecurringDatesByWeek: createRecurringDatesByWeek
+}
+
 
 
 

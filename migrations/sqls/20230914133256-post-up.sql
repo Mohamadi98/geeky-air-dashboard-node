@@ -13,5 +13,5 @@ websites JSONB,
 integrations TEXT[],
 created_at TIMESTAMP,
 updated_at TIMESTAMP,
-expire_at TIMESTAMP
+expire_at DATE
 );
