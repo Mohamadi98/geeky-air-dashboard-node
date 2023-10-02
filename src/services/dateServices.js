@@ -64,8 +64,23 @@ const get_time_difference = (timestamp) => {
 
     const timeDifferenceSeconds = Math.floor(timeDifferenceMilliseconds / 1000);
     const timeDifferenceMinutes = Math.floor(timeDifferenceSeconds / 60);
+    const timeDifferenceHours = Math.floor(timeDifferenceMinutes / 60);
+    const timeDifferenceDays = Math.floor(timeDifferenceHours / 24);
 
-    return timeDifferenceMinutes;
+    if(timeDifferenceSeconds < 60) {
+        return `Posted ${timeDifferenceSeconds} ago.`
+    }
+    if(timeDifferenceMinutes < 60) {
+        return `Posted ${timeDifferenceMinutes} ago.`
+    }
+    if(timeDifferenceHours < 24) {
+        return `Posted ${timeDifferenceHours} ago.`
+    }
+    if(timeDifferenceDays <= 3) {
+        return `Posted ${timeDifferenceDays} ago.`
+    }
+    const date = new Date(timestamp)
+    return `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`
 }
 
 const convert_days_arr_to_num_arr = (daysArray) => {
