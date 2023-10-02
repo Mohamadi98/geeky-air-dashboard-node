@@ -1,5 +1,6 @@
 const cronJob = require('node-cron')
 const businessServices = require('../services/businessServices')
+const postServices = require('../services/postServices')
 const dateServices = require('../services/dateServices')
 
 // const job0 = cronJob.schedule('0 0 * * *', async () => {
@@ -41,10 +42,33 @@ const dateServices = require('../services/dateServices')
 // });
 
 const postsCronJob = cronJob.schedule('* * * * *', async () => {
-    console.log('posts cron job started');
+    console.log('Posts Cron Job Started');
     const currentEstDateTime = dateServices.convert_from_utc_to_est();
     console.log(currentEstDateTime);
-    console.log('cron job finished executing');
+    const posts = await postServices.seacrh_by_date(currentEstDateTime);
+
+    if (posts.length === 0) {
+        console.log('Cron Job Finished Executing - No Results Found');
+    }
+
+    else {
+        for (const post of posts) {
+            if (post.dataValues['type'] === 'scheduled') {
+                post_data = {
+                    status: 'published'
+                }
+                post_id = post.dataValues['id'];
+                const db_response = await postServices.update_post(post_data, post_id);
+                if (db_response > 0) {
+                    console.log(`row with id:${post_id} status updated to 'published'`);
+                }
+                else {
+                    console.log(`issue updating row with id:${post_id}, error received: ${db_response}`);
+                }
+            }
+        }
+    }
+    console.log('Cron Job Finished Executing');
 });
 
 module.exports = {

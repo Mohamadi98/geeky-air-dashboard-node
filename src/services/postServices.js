@@ -31,16 +31,30 @@ const show_all_posts = async () => {
     }
 }
 
-const seacrh_by_date = async (dateTime) => {
+const seacrh_by_date = async () => {
     try {
         const posts = await post_agent.findAll({
-            where: post_agent.sequelize.literal(`
-                EXISTS (
-                    SELECT 1
-                    FROM unnest(dates) AS date
-                    WHERE DATE_TRUNC('minute', date) = DATE_TRUNC('minute', '${dateTime}'::timestamp)
-                );
-            `),
+            where: {
+                [Op.and]: [
+                //   post_agent.sequelize.literal(`
+                //     EXISTS (
+                //       SELECT 1
+                //       FROM unnest(dates) AS date
+                //       WHERE DATE_TRUNC('minute', date) = DATE_TRUNC('minute', '${dateTime}'::timestamp)
+                //     )
+                //   `),
+                  {
+                    type: {
+                      [Op.or]: ['scheduled', 'recurring'],
+                    },
+                  },
+                  {
+                    status: {
+                      [Op.ne]: 'published',
+                    },
+                  },
+                ],
+              },
         });
         return posts
     } catch (error) {

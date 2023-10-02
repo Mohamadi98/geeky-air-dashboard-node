@@ -298,7 +298,16 @@ const Mohamadi = async (req, res) => {
 }
 
 const playGround = async (req, res) => {
-    
+    const db_response = await postServices.seacrh_by_date();
+    for (const response of db_response) {
+        if (response.dataValues['status'] === 'scheduled' && 
+            response.dataValues['type'] === 'scheduled') {
+                console.log(response.dataValues['id']);
+            }
+    }
+    res.status(200).json({
+        db_response
+    });
 }
 
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business)
