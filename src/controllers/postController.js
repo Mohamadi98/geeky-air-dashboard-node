@@ -62,7 +62,6 @@ const add_post = async (req, res) => {
         const date = request_data['schedule_date'];
         const time = request_data['time'];
         const newDateTime = dateServices.create_est_with_date_and_time(date, time);
-        console.log(newDateTime);
 
         const data = {
             business_id: request_data['business_id'],
@@ -108,7 +107,6 @@ const add_post = async (req, res) => {
             const startingDate = dateServices
                 .create_est_with_date_and_time(request_data['start_date'],
                     request_data['time']);
-            console.log(startingDate);
             const endingDate = dateServices
                 .create_est_with_date_and_time(request_data['end_date'],
                 request_data['time']);
@@ -207,7 +205,6 @@ const add_post = async (req, res) => {
                 dates.push(dateServices.convert_from_est_to_utc_with_time_and_date(
                     date, time));
             }
-            console.log(dates);
 
             const data = {
                 business_id: request_data['business_id'],
