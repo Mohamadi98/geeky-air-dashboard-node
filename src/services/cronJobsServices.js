@@ -68,7 +68,7 @@ const postsCronJob = cronJob.schedule('* * * * *', async () => {
                 }
             } else if (post.dataValues['type'] === 'recurring') {
                 const post_data = {
-                    business_id: post.dataValues['id'],
+                    business_id: post.dataValues['business_id'],
                     images: post.dataValues['images'],
                     video: post.dataValues['video'],
                     content: post.dataValues['content'],
@@ -76,6 +76,7 @@ const postsCronJob = cronJob.schedule('* * * * *', async () => {
                     type: 'publish',
                     italic: post.dataValues['italic'],
                     bold: post.dataValues['bold'],
+                    title: post.dataValues['title'],
                     websites: post.dataValues['websites']
                 }
                 const db_response = await postServices.create(post_data)
