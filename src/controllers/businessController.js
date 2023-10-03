@@ -8,6 +8,7 @@ const working_day_time_services = require('../services/working_day_time_services
 const dateServices = require('../services/dateServices')
 const awsS3Services = require('../services/awsS3Services')
 const postServices = require('../services/postServices')
+const moment = require('moment-timezone')
 
 dotenv.config();
 const businessRouter = express.Router();
@@ -298,15 +299,12 @@ const Mohamadi = async (req, res) => {
 }
 
 const playGround = async (req, res) => {
-    const db_response = await postServices.seacrh_by_date();
-    for (const response of db_response) {
-        if (response.dataValues['status'] === 'scheduled' && 
-            response.dataValues['type'] === 'scheduled') {
-                console.log(response.dataValues['id']);
-            }
-    }
+    const date = '2023-10-01T20:30:00Z';
+    const current = moment(date).tz('UTC');
+    const formatted = current.format('YYYY-MM-DDTHH:mm:ssZ')
+    const db_response = await postServices.seacrh_by_date(formatted);
     res.status(200).json({
-        db_response
+        'message': db_response
     });
 }
 

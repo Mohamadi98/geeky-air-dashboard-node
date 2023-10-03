@@ -1,22 +1,23 @@
 const dateServices = require('../services/dateServices')
+const moment = require('moment-timezone')
 
 const createRecurringDatesByWeek = (daysOfTheWeek, everyWeek, startingDate, endingDate) => {
   const result = [];
-  const eDate = new Date(endingDate);
+  const eDate = endingDate;
 
   daysOfTheWeek.forEach(day => {
-    let date = new Date(startingDate);
+    let date = moment(startingDate).tz('America/New_York');
 
     while (date <= eDate) {
-      if (date.getDay() === day) {
+      if (date.day() === day) {
         const isoString = date.toISOString(); // Convert date to ISO string
         if (!result.includes(isoString)) {
           result.push(isoString);
         }
-        date = new Date(isoString); // Create a new date object from the ISO string
-        date.setDate(date.getDate() + 7 * everyWeek);
+        date = moment(isoString).tz('America/New_York'); // Create a new moment object from the ISO string
+        date.add(7 * everyWeek, 'days');
       } else {
-        date.setDate(date.getDate() + 1);
+        date.add(1, 'day');
       }
     }
   });
@@ -26,21 +27,20 @@ const createRecurringDatesByWeek = (daysOfTheWeek, everyWeek, startingDate, endi
 
 const createRecurringDatesByMonth = (daysOfTheMonth, everyMonth, endingDate, time) => {
   const result = [];
-  const eDate = new Date(endingDate);
-  const startingDate = dateServices.convert_from_utc_to_est_with_time(time);
+  // const eDate = moment(endingDate).tz('America/New_York');
+  const eDate = endingDate;
+  const startingDate = dateServices.create_est_with_time(time);
 
   daysOfTheMonth.forEach(day => {
-    
-    let date = new Date(startingDate);
+    let date = moment(startingDate).tz('America/New_York');
 
-    while (date <= eDate) {
-      if (date.getDate() === day) {
+    while (date.isSameOrBefore(eDate, 'day')) {
+      if (date.date() === day) {
         const isoString = date.toISOString(); // Convert date to ISO string
-        date = new Date(isoString); // Create a new date object from the ISO string
         result.push(isoString);
-        date.setDate(date.getDate() + 28 * everyMonth);
+        date.add(28 * everyMonth, 'days');
       } else {
-        date.setDate(date.getDate() + 1);
+        date.add(1, 'day');
       }
     }
   });
