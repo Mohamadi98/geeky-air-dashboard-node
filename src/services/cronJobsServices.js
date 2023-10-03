@@ -54,10 +54,10 @@ const postsCronJob = cronJob.schedule('* * * * *', async () => {
     else {
         for (const post of posts) {
             if (post.dataValues['type'] === 'scheduled') {
-                post_data = {
+                const post_data = {
                     status: 'published'
                 }
-                post_id = post.dataValues['id'];
+                const post_id = post.dataValues['id'];
                 const db_response = await postServices.update_post(post_data, post_id);
                 if (db_response > 0) {
                     console.log(`row with id:${post_id} status updated to 'published'`);
@@ -65,6 +65,25 @@ const postsCronJob = cronJob.schedule('* * * * *', async () => {
                 else {
                     console.log(`issue updating row with id:${post_id}, error received: ${db_response}`);
                 }
+            } else if (post.dataValues['type'] === 'recurring') {
+                const post_data = {
+                    business_id: post.dataValues['id'],
+                    images: post.dataValues['images'],
+                    video: post.dataValues['video'],
+                    content: post.dataValues['content'],
+                    status: 'published',
+                    type: 'publish',
+                    italic: post.dataValues['italic'],
+                    bold: post.dataValues['bold'],
+                    websites: post.dataValues['websites']
+                }
+                const db_response = await postServices.create(post_data)
+                if(db_response.id) {
+                    console.log(`row with id:${db_response.id} created`);
+                } else {
+                    console.log(`issue creating row, error received: ${db_response}`)
+                }
+
             }
         }
     }
@@ -73,4 +92,4 @@ const postsCronJob = cronJob.schedule('* * * * *', async () => {
 
 module.exports = {
     postsCronJob: postsCronJob
-  }
+}
