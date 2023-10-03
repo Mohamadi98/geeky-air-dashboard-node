@@ -46,6 +46,9 @@ const post_agent = db_client.define('post', {
       integrations: {
         type: DataTypes.ARRAY(DataTypes.STRING)
       },
+      title: {
+        type: DataTypes.STRING
+      },
       expire_at: {
         type: DataTypes.DATE
       }

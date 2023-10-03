@@ -2,6 +2,7 @@ const cronJob = require('node-cron')
 const businessServices = require('../services/businessServices')
 const postServices = require('../services/postServices')
 const dateServices = require('../services/dateServices')
+const moment = require('moment-timezone')
 
 // const job0 = cronJob.schedule('0 0 * * *', async () => {
 //     try {
@@ -43,53 +44,35 @@ const dateServices = require('../services/dateServices')
 
 const postsCronJob = cronJob.schedule('* * * * *', async () => {
     console.log('Posts Cron Job Started');
-    const currentEstDateTime = dateServices.convert_from_utc_to_est();
-    console.log(currentEstDateTime);
-    const posts = await postServices.seacrh_by_date(currentEstDateTime);
+    const currentUtcDateTime = moment().tz('UTC');
+    const formattedUtcDate = currentUtcDateTime.format('YYYY-MM-DDTHH:mm:ssZ');
+    console.log(formattedUtcDate);
+    // const posts = await postServices.seacrh_by_date(currentUtcDateTime);
 
-    if (posts.length === 0) {
-        console.log('Cron Job Finished Executing - No Results Found');
-    }
+    // if (posts.length === 0) {
+    //     console.log('Cron Job Finished Executing - No Results Found');
+    // }
 
-    else {
-        for (const post of posts) {
-            if (post.dataValues['type'] === 'scheduled') {
-                const post_data = {
-                    status: 'published'
-                }
-                const post_id = post.dataValues['id'];
-                const db_response = await postServices.update_post(post_data, post_id);
-                if (db_response > 0) {
-                    console.log(`row with id:${post_id} status updated to 'published'`);
-                }
-                else {
-                    console.log(`issue updating row with id:${post_id}, error received: ${db_response}`);
-                }
-            } else if (post.dataValues['type'] === 'recurring') {
-                const post_data = {
-                    business_id: post.dataValues['id'],
-                    images: post.dataValues['images'],
-                    video: post.dataValues['video'],
-                    content: post.dataValues['content'],
-                    status: 'published',
-                    type: 'publish',
-                    italic: post.dataValues['italic'],
-                    bold: post.dataValues['bold'],
-                    websites: post.dataValues['websites']
-                }
-                const db_response = await postServices.create(post_data)
-                if(db_response.id) {
-                    console.log(`row with id:${db_response.id} created`);
-                } else {
-                    console.log(`issue creating row, error received: ${db_response}`)
-                }
-
-            }
-        }
-    }
-    console.log('Cron Job Finished Executing');
+    // else {
+    //     for (const post of posts) {
+    //         if (post.dataValues['type'] === 'scheduled') {
+    //             post_data = {
+    //                 status: 'published'
+    //             }
+    //             post_id = post.dataValues['id'];
+    //             const db_response = await postServices.update_post(post_data, post_id);
+    //             if (db_response > 0) {
+    //                 console.log(`row with id:${post_id} status updated to 'published'`);
+    //             }
+    //             else {
+    //                 console.log(`issue updating row with id:${post_id}, error received: ${db_response}`);
+    //             }
+    //         }
+    //     }
+    // }
+    // console.log('Cron Job Finished Executing');
 });
 
 module.exports = {
     postsCronJob: postsCronJob
-}
+  }

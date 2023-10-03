@@ -30,6 +30,7 @@ const add_post = async (req, res) => {
             type: request_data['type'],
             italic: request_data['italic'],
             bold: request_data['bold'],
+            title: request_data['title'],
             integrations: request_data['integrations'],
             websites: [{
                 "website_name": "post-your-biz4.vercel.app",
@@ -72,6 +73,7 @@ const add_post = async (req, res) => {
             type: request_data['type'],
             italic: request_data['italic'],
             bold: request_data['bold'],
+            title: request_data['title'],
             integrations: request_data['integrations'],
             dates: [newDateTime],
             websites: [{
@@ -101,7 +103,7 @@ const add_post = async (req, res) => {
         }
     }
     else if (request_data['type'] === 'recurring') {
-        if (request_data['recurring_for'] === 'week') {
+        if (request_data['recurring_for'] === 'Week') {
             const daysOfTheWeek = dateServices.convert_days_arr_to_num_arr(request_data['recurring_on']);
             const everyWeek = request_data['recurring_every'];
             const startingDate = dateServices
@@ -122,6 +124,7 @@ const add_post = async (req, res) => {
                 type: request_data['type'],
                 italic: request_data['italic'],
                 bold: request_data['bold'],
+                title: request_data['title'],
                 integrations: request_data['integrations'],
                 dates: dates,
                 expire_at: endingDate,
@@ -150,7 +153,7 @@ const add_post = async (req, res) => {
                 });
             }
         }
-        else if (request_data['recurring_for'] === 'month') {
+        else if (request_data['recurring_for'] === 'Month') {
             const daysOfTheMonth = request_data['selected_days'];
             const everyMonth = request_data['recurring_every'];
             const endingDate = dateServices
@@ -169,6 +172,7 @@ const add_post = async (req, res) => {
                 type: request_data['type'],
                 italic: request_data['italic'],
                 bold: request_data['bold'],
+                title: request_data['title'],
                 integrations: request_data['integrations'],
                 dates: dates,
                 expire_at: endingDate,
@@ -197,7 +201,7 @@ const add_post = async (req, res) => {
                 });
             }
         }
-        else if (request_data['recurring_for'] === 'year') {
+        else if (request_data['recurring_for'] === 'Year') {
             const yearDates = request_data['selected_days'];
             const time = request_data['time'];
             const dates = [];
@@ -215,6 +219,7 @@ const add_post = async (req, res) => {
                 type: request_data['type'],
                 italic: request_data['italic'],
                 bold: request_data['bold'],
+                title: request_data['title'],
                 integrations: request_data['integrations'],
                 dates: dates,
                 websites: [{

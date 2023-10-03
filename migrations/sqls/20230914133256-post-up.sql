@@ -11,6 +11,7 @@ italic BOOLEAN,
 bold BOOLEAN,
 websites JSONB,
 integrations TEXT[],
+title VARCHAR(200),
 created_at TIMESTAMP,
 updated_at TIMESTAMP,
 expire_at DATE
