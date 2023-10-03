@@ -47,30 +47,30 @@ const postsCronJob = cronJob.schedule('* * * * *', async () => {
     const currentUtcDateTime = moment().tz('UTC');
     const formattedUtcDate = currentUtcDateTime.format('YYYY-MM-DDTHH:mm:ssZ');
     console.log(formattedUtcDate);
-    // const posts = await postServices.seacrh_by_date(currentUtcDateTime);
+    const posts = await postServices.seacrh_by_date(formattedUtcDate);
 
-    // if (posts.length === 0) {
-    //     console.log('Cron Job Finished Executing - No Results Found');
-    // }
+    if (posts.length === 0) {
+        console.log('Cron Job Finished Executing - No Results Found');
+    }
 
-    // else {
-    //     for (const post of posts) {
-    //         if (post.dataValues['type'] === 'scheduled') {
-    //             post_data = {
-    //                 status: 'published'
-    //             }
-    //             post_id = post.dataValues['id'];
-    //             const db_response = await postServices.update_post(post_data, post_id);
-    //             if (db_response > 0) {
-    //                 console.log(`row with id:${post_id} status updated to 'published'`);
-    //             }
-    //             else {
-    //                 console.log(`issue updating row with id:${post_id}, error received: ${db_response}`);
-    //             }
-    //         }
-    //     }
-    // }
-    // console.log('Cron Job Finished Executing');
+    else {
+        for (const post of posts) {
+            if (post.dataValues['type'] === 'scheduled') {
+                post_data = {
+                    status: 'published'
+                }
+                post_id = post.dataValues['id'];
+                const db_response = await postServices.update_post(post_data, post_id);
+                if (db_response > 0) {
+                    console.log(`row with id:${post_id} status updated to 'published'`);
+                }
+                else {
+                    console.log(`issue updating row with id:${post_id}, error received: ${db_response}`);
+                }
+            }
+        }
+    }
+    console.log('Cron Job Finished Executing');
 });
 
 module.exports = {
