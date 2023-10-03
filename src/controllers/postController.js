@@ -202,7 +202,7 @@ const add_post = async (req, res) => {
             const time = request_data['time'];
             const dates = [];
             for (const date of yearDates) {
-                dates.push(dateServices.convert_from_est_to_utc_with_time_and_date(
+                dates.push(dateServices.create_est_with_date_and_time(
                     date, time));
             }
 
