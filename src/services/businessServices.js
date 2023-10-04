@@ -99,6 +99,40 @@ const fetch_business_via_website_request = async (website_name) => {
     }
 }
 
+const posts_permission_checker = async (id, websiteName) => {
+    try {
+        const db_response = await business_agent.findOne({
+            where: {
+                [Op.and]: [
+                  {
+                    websites: {
+                      [Op.contains]: [{
+                        website_name: websiteName,
+                        website_value: true
+                      }]
+                    }
+                  },
+                  {
+                    websites_posts: {
+                      [Op.contains]: [{
+                        website_name: websiteName,
+                        website_value: true
+                      }]
+                    }
+                  },
+                  {
+                    id: id
+                  }
+                ]
+              }
+        });
+        console.log(db_response);
+        return db_response;
+    } catch (error) {
+        return `error fetching businesse: ${error}`
+    }
+}
+
 const filter_businesses_website_request = async (website_name, filter_object) => {
     try {
         const where_values = {
@@ -182,5 +216,6 @@ module.exports = {
     filter_businesses_website_request: filter_businesses_website_request,
     fetch_businesses_by_date: fetch_businesses_by_date,
     update_websites_permission:update_websites_permission,
-    fetch_businesses_identifiers: fetch_businesses_identifiers
+    fetch_businesses_identifiers: fetch_businesses_identifiers,
+    posts_permission_checker: posts_permission_checker
 }

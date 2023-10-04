@@ -9,6 +9,7 @@ const dateServices = require('../services/dateServices')
 const awsS3Services = require('../services/awsS3Services')
 const postServices = require('../services/postServices')
 const moment = require('moment-timezone')
+const websitePermsServices = require('../services/handlingWebsitesPermissions')
 
 dotenv.config();
 const businessRouter = express.Router();
@@ -33,6 +34,20 @@ const add_business = async (req, res) => {
             "website_value" : true
         },
     ]
+
+    data['websites_posts'] = [{
+        "website_name" : "post-your-biz4.vercel.app",
+        "website_value" : true
+    },
+    {
+        "website_name" : "post-your-biz1.vercel.app",
+        "website_value" : true
+    },
+    {
+        "website_name" : "post-your-biz2.vercel.app",
+        "website_value" : true
+    },
+]
 
     if (data['logo'] === "") {
         data['logo'] = 'https://via.placeholder.com/180x180&text=image1';
@@ -139,6 +154,9 @@ const update_business = async (req, res) => {
     if (data['video'] !== "") {
         data['video'] = await awsS3Services.upload_video_to_s3(data['video'], business_name);
     }
+
+    data['websites_posts'] = websitePermsServices.permissions_handler(data['websites'],
+        data['websites_posts']);
 
     const result = await businessServices.update_business_by_id(data, id);
     if (result[0] === 1) {
@@ -299,12 +317,39 @@ const Mohamadi = async (req, res) => {
 }
 
 const playGround = async (req, res) => {
-    const date = '2023-10-01T20:30:00Z';
-    const current = moment(date).tz('UTC');
-    const formatted = current.format('YYYY-MM-DDTHH:mm:ssZ')
-    const db_response = await postServices.seacrh_by_date(formatted);
+    const websites = [
+        {
+            "website_name": "post-your-biz4.vercel.app",
+            "website_value": true
+        },
+        {
+            "website_name": "post-your-biz1.vercel.app",
+            "website_value": false
+        },
+        {
+            "website_name": "post-your-biz2.vercel.app",
+            "website_value": false
+        }
+    ]
+    let websites_posts = [
+        {
+            "website_name": "post-your-biz4.vercel.app",
+            "website_value": false
+        },
+        {
+            "website_name": "post-your-biz1.vercel.app",
+            "website_value": true
+        },
+        {
+            "website_name": "post-your-biz2.vercel.app",
+            "website_value": true
+        }
+    ]
+    websites_posts = websitePermsServices.permissions_handler(websites, websites_posts);
+    console.log(websites);
+    console.log(websites_posts);
     res.status(200).json({
-        'message': db_response
+        'message': websites_posts
     });
 }
 

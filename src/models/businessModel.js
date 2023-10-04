@@ -63,6 +63,9 @@ const business_agent = db_client.define('business', {
     },
     websites: {
         type: DataTypes.JSONB
+    },
+    websites_posts: {
+        type: DataTypes.JSONB
     }
 }, {
     timestamps: true,
