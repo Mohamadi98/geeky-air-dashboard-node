@@ -64,6 +64,11 @@ const show_all_posts_website_request = async (website_name) => {
 const fetch_post_by_id = async (id) => {
     try {
         const post = await post_agent.findOne({
+            include: {
+                model: business_agent,
+                attributes: ['name', 'logo'],
+                required: true, 
+            },
             where: {
                 id: id
             }
