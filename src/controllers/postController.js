@@ -104,6 +104,7 @@ const add_post = async (req, res) => {
     }
     else if (request_data['type'] === 'recurring') {
         if (request_data['recurring_for'] === 'Week') {
+            console.log(request_data['recurring_on']);
             const daysOfTheWeek = dateServices.convert_days_arr_to_num_arr(request_data['recurring_on']);
             const everyWeek = request_data['recurring_every'];
             const startingDate = dateServices
@@ -261,32 +262,37 @@ const add_post = async (req, res) => {
     }
 }
 
-const get_posts = async (req, res) => {
-    const db_response = await postServices.show_all_posts();
-    for (let i = 0; i < db_response.length; i++) {
-        db_response[i].dataValues['postTime'] = dateServices.get_time_difference(db_response[i].dataValues['updated_at']);
-    }
-    if (db_response.length >= 0) {
-        res.status(200).json({
-            'data': db_response
-        });
-    }
-    else {
-        res.status(500).json({
-            db_response
-        });
-    }
-}
+// const get_posts = async (req, res) => {
+//     const db_response = await postServices.show_all_posts();
+//     for (let i = 0; i < db_response.length; i++) {
+//         db_response[i].dataValues['postTime'] = dateServices.get_time_difference(db_response[i].dataValues['updated_at']);
+//     }
+
+//     if (db_response.length >= 0) {
+//         res.status(200).json({
+//             'data': db_response
+//         });
+//     }
+//     else {
+//         res.status(500).json({
+//             db_response
+//         });
+//     }
+// }
 
 const get_posts_website_request = async (req, res) => {
     const {website_name} = req.params;
     const db_response = await postServices.show_all_posts_website_request(website_name);
 
     for (let i = 0; i < db_response.length; i++) {
-        db_response[i].dataValues['postTime'] = dateServices.get_time_difference(db_response[i].dataValues['updated_at']);
+        const timeDifference = dateServices.get_time_difference(db_response[i].dataValues['updated_at']);
+        db_response[i].dataValues['postTime'] = timeDifference;
+        console.log(db_response[i].dataValues['postTime']);
     }
-    console.log(db_response[0].dataValues['postTime']);
+    console.log(db_response[7].dataValues);
+    console.log(db_response[7].dataValues['postTime']);
     if (db_response.length >= 0) {
+        console.log(db_response);
         res.status(200).json({
             'data': db_response
         });
@@ -299,7 +305,7 @@ const get_posts_website_request = async (req, res) => {
 }
 
 postRouter.post('/add-post', middlewares.check_active, add_post);
-postRouter.get('/get-all-posts', get_posts);
+// postRouter.get('/get-all-posts', get_posts);
 postRouter.get('/get-all-posts-website-request/:website_name', get_posts_website_request)
 
 module.exports = postRouter;

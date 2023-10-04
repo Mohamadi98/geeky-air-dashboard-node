@@ -3,12 +3,13 @@ const moment = require('moment-timezone')
 
 const createRecurringDatesByWeek = (daysOfTheWeek, everyWeek, startingDate, endingDate) => {
   const result = [];
-  const eDate = endingDate;
+  const eDate = moment(endingDate).tz('America/New_York');
 
   daysOfTheWeek.forEach(day => {
     let date = moment(startingDate).tz('America/New_York');
 
     while (date <= eDate) {
+      console.log(date.day());
       if (date.day() === day) {
         const isoString = date.toISOString(); // Convert date to ISO string
         if (!result.includes(isoString)) {
@@ -22,6 +23,7 @@ const createRecurringDatesByWeek = (daysOfTheWeek, everyWeek, startingDate, endi
     }
   });
 
+  console.log(result);
   return result;
 };
 
