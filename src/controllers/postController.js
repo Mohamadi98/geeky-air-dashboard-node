@@ -104,7 +104,6 @@ const add_post = async (req, res) => {
     }
     else if (request_data['type'] === 'recurring') {
         if (request_data['recurring_for'] === 'Week') {
-            console.log(request_data['recurring_on']);
             const daysOfTheWeek = dateServices.convert_days_arr_to_num_arr(request_data['recurring_on']);
             const everyWeek = request_data['recurring_every'];
             const startingDate = dateServices
