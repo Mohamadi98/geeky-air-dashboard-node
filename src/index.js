@@ -8,7 +8,7 @@ const postRouter = require('../src/controllers/postController')
 const adminServices = require('../src/services/adminServices')
 const cors = require('cors');
 const morgan = require('morgan')
-//  const cronJobsServices = require('./services/cronJobsServices')
+const cronJobsServices = require('./services/cronJobsServices')
 
 
 dotenv.config();
