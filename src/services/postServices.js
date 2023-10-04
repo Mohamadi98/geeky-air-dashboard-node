@@ -61,6 +61,18 @@ const show_all_posts_website_request = async (website_name) => {
     }
 }
 
+const fetch_post_by_id = async (id) => {
+    try {
+        const post = await post_agent.findOne({
+            where: {
+                id: id
+            }
+        });
+    } catch (error) {
+        return `error fetching post by id: ${error}`;
+    }
+}
+
 const seacrh_by_date = async (dateTime) => {
     try {
         const posts = await post_agent.findAll({
@@ -113,5 +125,6 @@ module.exports = {
     seacrh_by_date: seacrh_by_date,
     show_all_posts: show_all_posts,
     update_post: update_post,
-    show_all_posts_website_request: show_all_posts_website_request
+    show_all_posts_website_request: show_all_posts_website_request,
+    fetch_post_by_id: fetch_post_by_id
 }

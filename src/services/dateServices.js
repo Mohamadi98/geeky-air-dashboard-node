@@ -115,17 +115,13 @@ const get_time_difference = (timestamp) => {
     const timeDifferenceDays = Math.floor(timeDifferenceHours / 24);
 
     if(timeDifferenceSeconds < 60) {
-        return (timeDifferenceSeconds+ " seconds ago")
-        // return `${timeDifferenceSeconds} seconds ago`
+        return `${timeDifferenceSeconds} seconds ago`
     }
     if(timeDifferenceMinutes < 60) {
-        // return `${timeDifferenceMinutes} minutes ago.`
-        return (timeDifferenceMinutes+ " minutes ago")
+        return `${timeDifferenceMinutes} minutes ago.`
     }
     if(timeDifferenceHours < 24) {
-        // return `some data hours ago.`
-        return (timeDifferenceHours+ " hours ago")
-
+        return `${timeDifferenceHours} hours ago.`
     }
     if(timeDifferenceDays <= 3) {
         return `${timeDifferenceDays} days ago.`
