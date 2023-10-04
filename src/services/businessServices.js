@@ -105,14 +105,6 @@ const posts_permission_checker = async (id, websiteName) => {
             where: {
                 [Op.and]: [
                   {
-                    websites: {
-                      [Op.contains]: [{
-                        website_name: websiteName,
-                        website_value: true
-                      }]
-                    }
-                  },
-                  {
                     websites_posts: {
                       [Op.contains]: [{
                         website_name: websiteName,
