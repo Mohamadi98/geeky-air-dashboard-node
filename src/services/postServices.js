@@ -68,6 +68,7 @@ const fetch_post_by_id = async (id) => {
                 id: id
             }
         });
+        return post;
     } catch (error) {
         return `error fetching post by id: ${error}`;
     }

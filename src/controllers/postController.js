@@ -264,7 +264,7 @@ const add_post = async (req, res) => {
 const get_post_by_id = async (req, res) => {
     const {id} = req.params;
     const db_response = await postServices.fetch_post_by_id(id);
-    if (db_response.id) {
+    if (db_response) {
         res.status(200).json({
             'data': db_response
         });
