@@ -101,7 +101,6 @@ const fetch_business_via_website_request = async (website_name) => {
 
 const posts_permission_checker = async (id, websiteName) => {
     try {
-        console.log({id, websiteName});
         const db_response = await business_agent.findAll({
             where: {
                 [Op.and]: [
