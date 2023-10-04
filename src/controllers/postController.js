@@ -285,6 +285,7 @@ const get_posts_website_request = async (req, res) => {
     for (let i = 0; i < db_response.length; i++) {
         db_response[i].dataValues['postTime'] = dateServices.get_time_difference(db_response[i].dataValues['updated_at']);
     }
+    console.log(db_response[0].dataValues['postTime']);
     if (db_response.length >= 0) {
         res.status(200).json({
             'data': db_response

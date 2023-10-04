@@ -111,6 +111,8 @@ const get_time_difference = (timestamp) => {
 
     const timeDifferenceSeconds = Math.floor(timeDifferenceMilliseconds / 1000);
     const timeDifferenceMinutes = Math.floor(timeDifferenceSeconds / 60);
+    console.log('time difference');
+    console.log(timeDifferenceSeconds);
     const timeDifferenceHours = Math.floor(timeDifferenceMinutes / 60);
     const timeDifferenceDays = Math.floor(timeDifferenceHours / 24);
 
@@ -133,13 +135,13 @@ const get_time_difference = (timestamp) => {
 const convert_days_arr_to_num_arr = (daysArray) => {
     const numArray = [];
     const map = {
-        'su': 0,
-        'mo': 1,
-        'tu': 2,
-        'we': 3,
-        'th': 4,
-        'fr': 5,
-        'sa': 6
+        'Su': 0,
+        'Mo': 1,
+        'Tu': 2,
+        'We': 3,
+        'Th': 4,
+        'Fr': 5,
+        'Sa': 6
     }
     for (const day of daysArray) {
         numArray.push(map[day]);
