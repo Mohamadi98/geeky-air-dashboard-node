@@ -280,7 +280,10 @@ const get_posts = async (req, res) => {
 
 const get_posts_website_request = async (req, res) => {
     const {website_name} = req.params;
+    console.log(website_name);
     const db_response = await postServices.show_all_posts_website_request(website_name);
+    console.log(db_response);
+
     for (let i = 0; i < db_response.length; i++) {
         db_response[i].dataValues['postTime'] = dateServices.get_time_difference(db_response[i].dataValues['updated_at']);
     }
@@ -298,6 +301,6 @@ const get_posts_website_request = async (req, res) => {
 
 postRouter.post('/add-post', middlewares.check_active, add_post);
 postRouter.get('/get-all-posts', get_posts);
-postRouter.get('/get-all-posts-website-request:website_name', get_posts_website_request)
+postRouter.get('/get-all-posts-website-request/:website_name', get_posts_website_request)
 
 module.exports = postRouter;

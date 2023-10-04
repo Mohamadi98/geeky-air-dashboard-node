@@ -45,10 +45,13 @@ const show_all_posts_website_request = async (website_name) => {
                 status: 'published'
             }
         });
+        console.log(posts);
         for (const post of posts) {
-            const business_id = post.dataValues['business_id']
+            const business_id = post.dataValues.business_id;
             const db_response = await business_services.posts_permission_checker(business_id, website_name);
-            if (db_response.id) {
+            console.log('post Service');
+            console.log({db_response});
+            if (db_response.length > 0) {
                 response.push(post);
             }
             else {

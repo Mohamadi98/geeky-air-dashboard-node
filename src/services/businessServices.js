@@ -101,16 +101,17 @@ const fetch_business_via_website_request = async (website_name) => {
 
 const posts_permission_checker = async (id, websiteName) => {
     try {
-        const db_response = await business_agent.findOne({
+        console.log({id, websiteName});
+        const db_response = await business_agent.findAll({
             where: {
                 [Op.and]: [
                   {
                     websites_posts: {
                       [Op.contains]: [{
-                        website_name: websiteName,
-                        website_value: true
+                        "website_name": websiteName,
+                        "website_value": true
                       }]
-                    }
+                  }
                   },
                   {
                     id: id
@@ -118,7 +119,6 @@ const posts_permission_checker = async (id, websiteName) => {
                 ]
               }
         });
-        console.log(db_response);
         return db_response;
     } catch (error) {
         return `error fetching businesse: ${error}`
