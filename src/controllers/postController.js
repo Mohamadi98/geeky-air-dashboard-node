@@ -13,6 +13,11 @@ const postRouter = express.Router();
 
 const add_post = async (req, res) => {
     const request_data = req.body;
+    if (request_data['business_id'] === undefined) {
+        res.status(400).json({
+            'message': 'business id is undefined'
+        });
+    }
     if (request_data['images'].length > 0) {
         request_data['images'] = await S3Services.upload_post_images(request_data['business_id'], request_data['images']);
     }
@@ -300,8 +305,7 @@ const get_posts_website_request = async (req, res) => {
     }
 }
 
-postRouter.post('/add-post', middlewares.check_active, add_post);
-// postRouter.get('/get-all-posts', get_posts);
+postRouter.post('/add-post', middlewares.check_active, add_post)
 postRouter.get('/get-all-posts-website-request/:website_name', get_posts_website_request)
 postRouter.get('/get-post-website_request/:id', get_post_by_id)
 

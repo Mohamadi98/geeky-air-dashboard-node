@@ -10,6 +10,7 @@ const awsS3Services = require('../services/awsS3Services')
 const postServices = require('../services/postServices')
 const moment = require('moment-timezone')
 const websitePermsServices = require('../services/handlingWebsitesPermissions')
+const recurringHandler = require('../services/createRecurringDates')
 
 dotenv.config();
 const businessRouter = express.Router();
@@ -234,39 +235,12 @@ const Mohamadi = async (req, res) => {
 }
 
 const playGround = async (req, res) => {
-    const websites = [
-        {
-            "website_name": "post-your-biz4.vercel.app",
-            "website_value": true
-        },
-        {
-            "website_name": "post-your-biz1.vercel.app",
-            "website_value": false
-        },
-        {
-            "website_name": "post-your-biz2.vercel.app",
-            "website_value": false
-        }
-    ]
-    let websites_posts = [
-        {
-            "website_name": "post-your-biz4.vercel.app",
-            "website_value": false
-        },
-        {
-            "website_name": "post-your-biz1.vercel.app",
-            "website_value": true
-        },
-        {
-            "website_name": "post-your-biz2.vercel.app",
-            "website_value": true
-        }
-    ]
-    websites_posts = websitePermsServices.permissions_handler(websites, websites_posts);
-    console.log(websites);
-    console.log(websites_posts);
+    const start = '2023-10-01';
+    const time = '12:30'
+    const end = '2024-06-12'
+    const response = recurringHandler.generateMonthlyDates(start, time, end);
     res.status(200).json({
-        'message': websites_posts
+        'message': response
     });
 }
 

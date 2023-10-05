@@ -47,9 +47,27 @@ const createRecurringDatesByMonth = (daysOfTheMonth, everyMonth, endingDate, tim
   return result;
 }
 
+const generateMonthlyDates = (startDate, time, endDate) => {
+  const result = [];
+  const concatDateTime = dateServices.create_est_with_date_and_time(startDate, time);
+  let currentDate = moment(concatDateTime).tz('America/New_York');
+  console.log(currentDate);
+  const formattedEndDate = dateServices.create_est_with_date_and_time(endDate, time);
+  const end = moment(formattedEndDate).tz('America/New_York');
+  console.log(end);
+
+  while (currentDate.isSameOrBefore(end)) {
+    result.push(currentDate.format());
+    currentDate.add(1, 'month');
+  }
+
+  return result;
+};
+
 module.exports = {
   createRecurringDatesByWeek: createRecurringDatesByWeek,
-  createRecurringDatesByMonth: createRecurringDatesByMonth
+  createRecurringDatesByMonth: createRecurringDatesByMonth,
+  generateMonthlyDates: generateMonthlyDates
 }
 
 
