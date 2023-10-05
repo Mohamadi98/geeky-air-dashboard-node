@@ -111,7 +111,7 @@ const get_time_difference = (timestamp) => {
     // const timestampObject = new Date(timestamp);
     console.log('created date time from timestamp parameter on render');
     console.log(timestampObject);
-    timestampObject.add(2, 'hours');
+    // timestampObject.add(2, 'hours');
     // timestampObject.setHours(timestampObject.getHours() + 2);
     if (timestampObject > currentDate) {
         console.log('executed only when timestamp is greater than the current date');
