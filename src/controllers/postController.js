@@ -266,8 +266,6 @@ const get_post_by_id = async (req, res) => {
     const {id} = req.params;
     const db_response = await postServices.fetch_post_by_id(id);
     const updated_at = db_response.dataValues['updated_at']
-    // let updated_at = moment(db_response.dataValues['updated_at']).tz('UTC');
-    // updated_at = updated_at.add(2, 'hours');
     const timeDifference = dateServices.get_time_difference(updated_at);
     db_response.dataValues['postTime'] = timeDifference;
     if (db_response) {
