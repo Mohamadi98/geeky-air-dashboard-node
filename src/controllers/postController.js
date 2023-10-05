@@ -5,6 +5,7 @@ const dateServices = require('../services/dateServices')
 const middlewares = require('../middlewares/check_if_admin_active')
 const S3Services = require('../services/awsS3Services')
 const recurringServices = require('../services/createRecurringDates')
+const moment = require('moment-timezone')
 
 
 dotenv.config();
@@ -264,6 +265,11 @@ const add_post = async (req, res) => {
 const get_post_by_id = async (req, res) => {
     const {id} = req.params;
     const db_response = await postServices.fetch_post_by_id(id);
+    const updated_at = db_response.dataValues['updated_at']
+    // let updated_at = moment(db_response.dataValues['updated_at']).tz('UTC');
+    // updated_at = updated_at.add(2, 'hours');
+    const timeDifference = dateServices.get_time_difference(updated_at);
+    db_response.dataValues['postTime'] = timeDifference;
     if (db_response) {
         res.status(200).json({
             'data': db_response
@@ -272,7 +278,7 @@ const get_post_by_id = async (req, res) => {
     else {
         res.status(400).json({
             'message': `No data found with this id:${id}`
-        })
+        });
     }
 }
 
@@ -281,8 +287,6 @@ const get_posts_website_request = async (req, res) => {
     const db_response = await postServices.show_all_posts_website_request(website_name);
 
     for (let i = 0; i < db_response.length; i++) {
-        console.log('database updated_at field for each row');
-        console.log(db_response[i].dataValues['updated_at']);
         const timeDifference = dateServices.get_time_difference(db_response[i].dataValues['updated_at']);
         db_response[i].dataValues['postTime'] = timeDifference;
     }
