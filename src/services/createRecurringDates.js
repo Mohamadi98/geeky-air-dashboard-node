@@ -9,7 +9,6 @@ const createRecurringDatesByWeek = (daysOfTheWeek, everyWeek, startingDate, endi
     let date = moment(startingDate).tz('America/New_York');
 
     while (date <= eDate) {
-      console.log(date.day());
       if (date.day() === day) {
         const isoString = date.toISOString(); // Convert date to ISO string
         if (!result.includes(isoString)) {
@@ -22,8 +21,6 @@ const createRecurringDatesByWeek = (daysOfTheWeek, everyWeek, startingDate, endi
       }
     }
   });
-
-  console.log(result);
   return result;
 };
 

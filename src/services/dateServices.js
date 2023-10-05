@@ -103,11 +103,18 @@ const create_est_with_time = (time) => {
 }
 
 const get_time_difference = (timestamp) => {
+    console.log('current date time on render');
     const currentDate = new Date();
+    console.log('created date time from timestamp parameter on render');
     const timestampObject = new Date(timestamp);
     timestampObject.setHours(timestampObject.getHours() + 2);
+    if (timestampObject > currentDate) {
+        console.log('executed only when timestamp is greater than the current date');
+    }
 
     const timeDifferenceMilliseconds = currentDate - timestampObject;
+    console.log('the time difference in ms on render');
+    console.log(timeDifferenceMilliseconds);
 
     const timeDifferenceSeconds = Math.floor(timeDifferenceMilliseconds / 1000);
     const timeDifferenceMinutes = Math.floor(timeDifferenceSeconds / 60);

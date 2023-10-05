@@ -276,32 +276,16 @@ const get_post_by_id = async (req, res) => {
     }
 }
 
-// const get_posts = async (req, res) => {
-//     const db_response = await postServices.show_all_posts();
-//     for (let i = 0; i < db_response.length; i++) {
-//         db_response[i].dataValues['postTime'] = dateServices.get_time_difference(db_response[i].dataValues['updated_at']);
-//     }
-
-//     if (db_response.length >= 0) {
-//         res.status(200).json({
-//             'data': db_response
-//         });
-//     }
-//     else {
-//         res.status(500).json({
-//             db_response
-//         });
-//     }
-// }
-
 const get_posts_website_request = async (req, res) => {
     const {website_name} = req.params;
     const db_response = await postServices.show_all_posts_website_request(website_name);
 
-    // for (let i = 0; i < db_response.length; i++) {
-    //     const timeDifference = dateServices.get_time_difference(db_response[i].dataValues['updated_at']);
-    //     db_response[i].dataValues['postTime'] = timeDifference;
-    // }
+    for (let i = 0; i < db_response.length; i++) {
+        console.log('database updated_at field for each row');
+        console.log(db_response[i].dataValues['updated_at']);
+        const timeDifference = dateServices.get_time_difference(db_response[i].dataValues['updated_at']);
+        db_response[i].dataValues['postTime'] = timeDifference;
+    }
     if (db_response.length >= 0) {
         res.status(200).json({
             'data': db_response
