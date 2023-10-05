@@ -114,7 +114,7 @@ const get_time_difference = (timestamp) => {
         console.log('executed only when timestamp is greater than the current date');
     }
 
-    const timeDifferenceMilliseconds = currentDate.getTime() - timestampObject.getTime();
+    const timeDifferenceMilliseconds = currentDate - timestampObject;
     console.log('the time difference in ms on render');
     console.log(timeDifferenceMilliseconds);
 
