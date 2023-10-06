@@ -1,7 +1,7 @@
 const business_agent = require('../models/businessModel')
 const post_agent = require('../models/postModel')
 const business_services = require('../services/businessServices')
-const { Op, sequelize } = require('sequelize')
+const { Op, sequelize, where } = require('sequelize')
 const dateServices = require('../services/dateServices')
 
 const create = async (data) => {
@@ -19,7 +19,7 @@ const show_all_posts = async () => {
             include: {
                 model: business_agent,
                 attributes: ['name', 'logo'],
-                required: true, 
+                required: true,
             },
             where: {
                 status: 'published'
@@ -39,7 +39,7 @@ const show_all_posts_website_request = async (website_name) => {
             include: {
                 model: business_agent,
                 attributes: ['name', 'logo'],
-                required: true, 
+                required: true,
             },
             where: {
                 status: 'published'
@@ -67,7 +67,7 @@ const fetch_post_by_id = async (id) => {
             include: {
                 model: business_agent,
                 attributes: ['name', 'logo'],
-                required: true, 
+                required: true,
             },
             where: {
                 id: id
@@ -84,23 +84,23 @@ const seacrh_by_date = async (dateTime) => {
         const posts = await post_agent.findAll({
             where: {
                 [Op.and]: [
-                  post_agent.sequelize.literal(`
+                    post_agent.sequelize.literal(`
                     EXISTS (
                       SELECT 1
                       FROM unnest(dates) AS date
                       WHERE DATE_TRUNC('minute', date) = DATE_TRUNC('minute', '${dateTime}'::timestamp)
                     )
                   `),
-                  {
-                    type: {
-                      [Op.or]: ['scheduled', 'recurring'],
+                    {
+                        type: {
+                            [Op.or]: ['scheduled', 'recurring'],
+                        },
                     },
-                  },
-                  {
-                    status: {
-                      [Op.ne]: 'published',
+                    {
+                        status: {
+                            [Op.ne]: 'published',
+                        },
                     },
-                  },
                 ],
             }
         });
@@ -118,10 +118,86 @@ const update_post = async (post_data, id) => {
             }
         )
         return affectedRowsCount;
-        }
+    }
 
     catch (error) {
-       return `there was an error updating the post: ${error}`
+        return `there was an error updating the post: ${error}`
+    }
+}
+
+const fetch_filter_posts = async (postType) => {
+    try {
+        const result = await post_agent.findAll({
+            where: {
+                type: postType
+            }
+        }
+        )
+        if (result.length >= 0) {
+            return {
+                status: 'success',
+                data: result
+            };
+        }
+    }
+    catch (error) {
+        return {
+            status: 'error',
+            message: `there was an error fetching the filtered posts: ${error}`
+        }
+    }
+}
+
+const fetch_filter_post_by_id = async (postType, id) => {
+    try {
+        const result = await post_agent.findAll({
+            where: {
+                type: postType,
+                business_id: id
+            }
+        }
+        )
+        if (result.length >= 0) {
+            return {
+                status: 'success',
+                data: result
+            };
+        }
+    }
+    catch (error) {
+        return {
+            status: 'error',
+            message: `there was an error fetching the filtered posts by id: ${error}`
+        }
+    }
+}
+
+const delete_by_id = async (id) => {
+    try {
+        const result = await post_agent.destroy({
+            where: {
+                id: id
+            }
+        });
+        if (result.length > 0) {
+            return {
+                status: 'success',
+                data: result
+            };
+        }
+        else {
+            return {
+                status: 'success',
+                data: [],
+                message: `No post associated with this id: ${id}`
+            }; 
+        }
+    }
+    catch (error) {
+        return {
+            status: 'error',
+            message: `there was an error deleting the post ${error}`
+        }
     }
 }
 
@@ -132,5 +208,8 @@ module.exports = {
     show_all_posts: show_all_posts,
     update_post: update_post,
     show_all_posts_website_request: show_all_posts_website_request,
-    fetch_post_by_id: fetch_post_by_id
+    fetch_post_by_id: fetch_post_by_id,
+    fetch_filter_posts: fetch_filter_posts,
+    fetch_filter_post_by_id: fetch_filter_post_by_id,
+    delete_by_id: delete_by_id
 }

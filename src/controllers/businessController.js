@@ -23,32 +23,32 @@ const add_business = async (req, res) => {
     data['name'] = data['name'].toLowerCase();
 
     data['websites'] = [{
-            "website_name" : "post-your-biz4.vercel.app",
-            "website_value" : true
-        },
-        {
-            "website_name" : "post-your-biz1.vercel.app",
-            "website_value" : true
-        },
-        {
-            "website_name" : "post-your-biz2.vercel.app",
-            "website_value" : true
-        },
+        "website_name": "post-your-biz4.vercel.app",
+        "website_value": true
+    },
+    {
+        "website_name": "post-your-biz1.vercel.app",
+        "website_value": true
+    },
+    {
+        "website_name": "post-your-biz2.vercel.app",
+        "website_value": true
+    },
     ]
 
     data['websites_posts'] = [{
-        "website_name" : "post-your-biz4.vercel.app",
-        "website_value" : true
+        "website_name": "post-your-biz4.vercel.app",
+        "website_value": true
     },
     {
-        "website_name" : "post-your-biz1.vercel.app",
-        "website_value" : true
+        "website_name": "post-your-biz1.vercel.app",
+        "website_value": true
     },
     {
-        "website_name" : "post-your-biz2.vercel.app",
-        "website_value" : true
+        "website_name": "post-your-biz2.vercel.app",
+        "website_value": true
     },
-]
+    ]
 
     if (data['logo'] === "") {
         data['logo'] = 'https://via.placeholder.com/180x180&text=image1';
@@ -66,7 +66,7 @@ const add_business = async (req, res) => {
         data['video'] = await awsS3Services.upload_video_to_s3(data['video'], business_name);
     }
 
-    if (data['expire_at'] === ""){
+    if (data['expire_at'] === "") {
         data['expire_at'] = dateServices.add_to_date(1);
     }
     const result = await businessServices.create(data);
@@ -107,7 +107,7 @@ const get_all_businesses = async (req, res) => {
 }
 
 const get_business = async (req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
     const result = await businessServices.fetch_business_by_id(id);
     if (result) {
         res.status(200).json({
@@ -125,14 +125,14 @@ const delete_business = async (req, res) => {
     const { id } = req.params;
     const result = await businessServices.delete_business_by_id(id);
     if (result === 1) {
-         res.status(200).json({
-              'message': 'business deleted successfuly!'
-         });
+        res.status(200).json({
+            'message': 'business deleted successfuly!'
+        });
     }
     else {
-         res.status(400).json({
-              'message': 'there is no business associated with this id'
-         });
+        res.status(400).json({
+            'message': 'there is no business associated with this id'
+        });
     }
 }
 
@@ -174,13 +174,13 @@ const update_business = async (req, res) => {
             });
         }
     }
-    
+
     else if (result[0] === 0) {
         res.status(400).json({
             'message': 'No business associated with this id'
         });
     }
-    
+
     else {
         res.status(500).json({
             result
@@ -200,7 +200,7 @@ const get_businesses_per_website_request = async (req, res) => {
 }
 
 const filter_businesses = async (req, res) => {
-    const {website_name} = req.params;
+    const { website_name } = req.params;
     const data = req.body;
     const result = await businessServices.filter_businesses_website_request(website_name, data);
     if (result) {
@@ -235,13 +235,22 @@ const Mohamadi = async (req, res) => {
 }
 
 const playGround = async (req, res) => {
-    const start = '2023-10-01';
-    const time = '12:30'
-    const end = '2024-06-12'
-    const response = recurringHandler.generateMonthlyDates(start, time, end);
-    res.status(200).json({
-        'message': response
-    });
+    const db_response = await postServices.delete_by_id(77);
+    if (db_response > 0) {
+        res.status(200).json({
+            'message': 'post deleted successfuly'
+        });
+    }
+    else if (db_response === 0) {
+        res.status(400).json({
+            'message': 'No post associated with this id'
+        });
+    }
+    else {
+        res.status(500).json({
+            'message': db_response
+        });
+    }
 }
 
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business)

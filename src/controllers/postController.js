@@ -117,7 +117,7 @@ const add_post = async (req, res) => {
                     request_data['time']);
             const endingDate = dateServices
                 .create_est_with_date_and_time(request_data['end_date'],
-                request_data['time']);
+                    request_data['time']);
             const dates = recurringServices.createRecurringDatesByWeek(daysOfTheWeek,
                 everyWeek, startingDate, endingDate);
 
@@ -168,7 +168,7 @@ const add_post = async (req, res) => {
             const time = request_data['time']
             const dates = recurringServices.createRecurringDatesByMonth(daysOfTheMonth,
                 everyMonth, endingDate, time);
-            
+
             const data = {
                 business_id: request_data['business_id'],
                 images: request_data['images'],
@@ -260,6 +260,32 @@ const add_post = async (req, res) => {
             });
         }
     }
+    else if (request_data['type'] === 'draft') {
+        const data = {
+            business_id: request_data['business_id'],
+            images: request_data['images'],
+            video: request_data['video'],
+            content: request_data['content'],
+            status: 'draft',
+            type: request_data['type'],
+            italic: request_data['italic'],
+            bold: request_data['bold'],
+            title: request_data['title'],
+            integrations: request_data['integrations'],
+        }
+
+        const db_response = await postServices.create(data);
+        if (db_response.id) {
+            res.status(200).json({
+                'message': 'post created successfuly!'
+            });
+        }
+        else {
+            res.status(500).json({
+                db_response
+            });
+        }
+    }
     else {
         res.status(400).json({
             'message': 'invalid post type'
@@ -268,7 +294,7 @@ const add_post = async (req, res) => {
 }
 
 const get_post_by_id = async (req, res) => {
-    const {id} = req.params;
+    const { id } = req.params;
     const db_response = await postServices.fetch_post_by_id(id);
     const updated_at = db_response.dataValues['updated_at']
     const timeDifference = dateServices.get_time_difference(updated_at);
@@ -286,7 +312,7 @@ const get_post_by_id = async (req, res) => {
 }
 
 const get_posts_website_request = async (req, res) => {
-    const {website_name} = req.params;
+    const { website_name } = req.params;
     const db_response = await postServices.show_all_posts_website_request(website_name);
 
     for (let i = 0; i < db_response.length; i++) {
@@ -305,8 +331,64 @@ const get_posts_website_request = async (req, res) => {
     }
 }
 
+const get_filtered_posts = async (req, res) => {
+    const type = req.body.type;
+    const db_response = await postServices.fetch_filter_posts(type);
+    if (db_response.status === 'success') {
+        res.status(200).json({
+            'data': db_response.data
+        });
+    }
+    else {
+        res.status(500).json({
+            'message': db_response.message
+        });
+    }
+}
+
+const get_filtered_posts_by_id = async (req, res) => {
+    const {id} = req.params;
+    const {type} = req.body;
+    const db_response = await postServices.fetch_filter_post_by_id(type, id);
+    if (db_response.status === 'success') {
+        res.status(200).json({
+            'data': db_response.data
+        });
+    }
+    else {
+        res.status(500).json({
+            'message': db_response.message
+        });
+    }
+}
+
+const delete_post = async (req, res) => {
+    const { id } = req.params;
+    const db_response = await postServices.delete_by_id(id);
+    if (db_response.status === 'success') {
+        if (db_response.data.length > 0) {
+            res.status(200).json({
+                'data': db_response.data
+            });
+        }
+        else {
+            res.status(200).json({
+                'data': db_response.message
+            });
+        }
+    }
+    else {
+        res.status(500).json({
+            'message': db_response.message
+        });
+    }
+}
+
 postRouter.post('/add-post', middlewares.check_active, add_post)
 postRouter.get('/get-all-posts-website-request/:website_name', get_posts_website_request)
 postRouter.get('/get-post-website_request/:id', get_post_by_id)
+postRouter.get('/get-filtered-posts', get_filtered_posts)
+postRouter.get('/get-filtered-posts/:id', get_filtered_posts_by_id)
+postRouter.delete('/delete-post/:id', middlewares.check_active, delete_post)
 
 module.exports = postRouter;

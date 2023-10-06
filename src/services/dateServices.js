@@ -129,6 +129,21 @@ const get_time_difference = (timestamp) => {
     return `${date.getMonth() + 1}-${date.getDate()}-${date.getFullYear()}`
 }
 
+function isOverAYearFromDate(inputDate) {
+    const dateToCheck = moment(inputDate, 'YYYY-MM-DD').tz('America/New_York');
+  
+    const currentDate = moment().tz('America/New_York');
+  
+    const yearsDiff = currentDate.diff(dateToCheck, 'years');
+  
+    if (yearsDiff > 1) {
+        return true;
+    }
+    else {
+        return false;
+    }
+  }
+
 const convert_days_arr_to_num_arr = (daysArray) => {
     const numArray = [];
     const map = {
@@ -156,5 +171,6 @@ module.exports = {
     convert_from_est_to_utc_with_time: convert_from_est_to_utc_with_time,
     convert_from_est_to_utc_with_time_and_date: convert_from_est_to_utc_with_time_and_date,
     create_est_with_date_and_time: create_est_with_date_and_time,
-    create_est_with_time: create_est_with_time
+    create_est_with_time: create_est_with_time,
+    isOverAYearFromDate: isOverAYearFromDate
 }
