@@ -327,12 +327,10 @@ const get_filtered_posts = async (req, res) => {
     const type = req.body.type;
     const db_response = await postServices.fetch_filter_posts(type);
     if (type === 'draft' || type === 'scheduled') {
-        console.log('we are here');
         for (let i = 0; i < db_response.data.length; i++) {
-            console.log('we are here');
-            // const diplayedTime = dateServices.functionToBe(db_response[i].dataValues['dates'][0]);
-            // db_response[i].dataValues['postTime'] = timeDifference;
             console.log(db_response.data[i].dataValues['dates'][0]);
+            const displayedTime = dateServices.modifyDateFormat(db_response.data[i].dataValues['dates'][0]);
+            db_response.data[i].dataValues['displayedTime'] = displayedTime;
         }
     }
     if (db_response.status === 'success') {

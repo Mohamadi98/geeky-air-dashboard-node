@@ -168,7 +168,7 @@ const modifyDateFormat = (date) => {
     const day = newDate.date()
     const hour = newDate.hour()
     const minute = newDate.minute()
-    const formattedDate = `${month}-${day}-${year} at ${hour}:${minute}`
+    const formattedDate = `${month + 1}-${day}-${year} at ${hour}:${minute}`
     return formattedDate
 }
 
@@ -185,5 +185,6 @@ module.exports = {
     convert_from_est_to_utc_with_time_and_date: convert_from_est_to_utc_with_time_and_date,
     create_est_with_date_and_time: create_est_with_date_and_time,
     create_est_with_time: create_est_with_time,
-    isOverAYearFromDate: isOverAYearFromDate
+    isOverAYearFromDate: isOverAYearFromDate,
+    modifyDateFormat: modifyDateFormat
 }
