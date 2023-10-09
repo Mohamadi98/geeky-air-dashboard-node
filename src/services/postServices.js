@@ -182,7 +182,8 @@ const delete_by_id = async (id) => {
         if (result.length > 0) {
             return {
                 status: 'success',
-                data: result
+                data: result,
+                message: 'post deleted successfully!'
             };
         }
         else {
