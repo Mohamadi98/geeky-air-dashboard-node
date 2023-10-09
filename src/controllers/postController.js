@@ -326,6 +326,15 @@ const get_posts_website_request = async (req, res) => {
 const get_filtered_posts = async (req, res) => {
     const type = req.body.type;
     const db_response = await postServices.fetch_filter_posts(type);
+    if (type === 'draft' || type === 'scheduled') {
+        console.log('we are here');
+        for (let i = 0; i < db_response.data.length; i++) {
+            console.log('we are here');
+            // const diplayedTime = dateServices.functionToBe(db_response[i].dataValues['dates'][0]);
+            // db_response[i].dataValues['postTime'] = timeDifference;
+            console.log(db_response.data[i].dataValues['dates'][0]);
+        }
+    }
     if (db_response.status === 'success') {
         res.status(200).json({
             'data': db_response.data
@@ -342,6 +351,7 @@ const get_filtered_posts_by_id = async (req, res) => {
     const {id} = req.params;
     const {type} = req.body;
     const db_response = await postServices.fetch_filter_post_by_id(type, id);
+
     if (db_response.status === 'success') {
         res.status(200).json({
             'data': db_response.data
