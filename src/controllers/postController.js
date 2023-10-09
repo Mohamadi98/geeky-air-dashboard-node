@@ -38,18 +38,6 @@ const add_post = async (req, res) => {
             bold: request_data['bold'],
             title: request_data['title'],
             integrations: request_data['integrations'],
-            websites: [{
-                "website_name": "post-your-biz4.vercel.app",
-                "website_value": true
-            },
-            {
-                "website_name": "post-your-biz1.vercel.app",
-                "website_value": true
-            },
-            {
-                "website_name": "post-your-biz2.vercel.app",
-                "website_value": true
-            }],
         }
 
         const db_response = await postServices.create(data);
@@ -261,6 +249,9 @@ const add_post = async (req, res) => {
         }
     }
     else if (request_data['type'] === 'draft') {
+        const date = request_data['schedule_date'];
+        const time = request_data['time'];
+        const newDateTime = dateServices.create_est_with_date_and_time(date, time);
         const data = {
             business_id: request_data['business_id'],
             images: request_data['images'],
@@ -271,6 +262,7 @@ const add_post = async (req, res) => {
             italic: request_data['italic'],
             bold: request_data['bold'],
             title: request_data['title'],
+            dates: [newDateTime],
             integrations: request_data['integrations'],
         }
 
