@@ -113,16 +113,16 @@ const get_time_difference = (timestamp) => {
     const timeDifferenceHours = Math.floor(timeDifferenceMinutes / 60);
     const timeDifferenceDays = Math.floor(timeDifferenceHours / 24);
 
-    if(timeDifferenceSeconds < 60) {
+    if (timeDifferenceSeconds < 60) {
         return `${timeDifferenceSeconds} seconds ago`
     }
-    if(timeDifferenceMinutes < 60) {
+    if (timeDifferenceMinutes < 60) {
         return `${timeDifferenceMinutes} minutes ago.`
     }
-    if(timeDifferenceHours < 24) {
+    if (timeDifferenceHours < 24) {
         return `${timeDifferenceHours} hours ago.`
     }
-    if(timeDifferenceDays <= 3) {
+    if (timeDifferenceDays <= 3) {
         return `${timeDifferenceDays} days ago.`
     }
     const date = new Date(timestamp)
@@ -131,18 +131,18 @@ const get_time_difference = (timestamp) => {
 
 function isOverAYearFromDate(inputDate) {
     const dateToCheck = moment(inputDate, 'YYYY-MM-DD').tz('America/New_York');
-  
+
     const currentDate = moment().tz('America/New_York');
-  
+
     const yearsDiff = currentDate.diff(dateToCheck, 'years');
-  
+
     if (yearsDiff > 1) {
         return true;
     }
     else {
         return false;
     }
-  }
+}
 
 const convert_days_arr_to_num_arr = (daysArray) => {
     const numArray = [];
@@ -160,6 +160,19 @@ const convert_days_arr_to_num_arr = (daysArray) => {
     }
     return numArray;
 }
+
+const modifyDateFormat = (date) => {
+    const newDate = moment(date).tz('America/New_York')
+    const year = newDate.year()
+    const month = newDate.month()
+    const day = newDate.date()
+    const hour = newDate.hour()
+    const minute = newDate.minute()
+    const formattedDate = `${month}-${day}-${year} at ${hour}:${minute}`
+    return formattedDate
+}
+
+
 
 module.exports = {
     add_to_date: add_to_date,
