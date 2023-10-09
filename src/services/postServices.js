@@ -128,6 +128,11 @@ const update_post = async (post_data, id) => {
 const fetch_filter_posts = async (postType) => {
     try {
         const result = await post_agent.findAll({
+            include: {
+                model: business_agent,
+                attributes: ['name', 'logo'],
+                required: true,
+            },
             where: {
                 type: postType
             }
@@ -151,6 +156,11 @@ const fetch_filter_posts = async (postType) => {
 const fetch_filter_post_by_id = async (postType, id) => {
     try {
         const result = await post_agent.findAll({
+            include: {
+                model: business_agent,
+                attributes: ['name', 'logo'],
+                required: true,
+            },
             where: {
                 type: postType,
                 business_id: id
