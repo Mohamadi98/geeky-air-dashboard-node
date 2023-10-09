@@ -34,6 +34,10 @@ const add_business = async (req, res) => {
         "website_name": "post-your-biz2.vercel.app",
         "website_value": true
     },
+    {
+        "website_name": "post-your-biz3.vercel.app",
+        "website_value": true
+    },
     ]
 
     data['websites_posts'] = [{
@@ -46,6 +50,10 @@ const add_business = async (req, res) => {
     },
     {
         "website_name": "post-your-biz2.vercel.app",
+        "website_value": true
+    },
+    {
+        "website_name": "post-your-biz3.vercel.app",
         "website_value": true
     },
     ]
