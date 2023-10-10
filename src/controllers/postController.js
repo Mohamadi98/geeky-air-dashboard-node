@@ -368,18 +368,21 @@ const delete_post = async (req, res) => {
     if (db_response.status === 'success') {
         if (db_response.data.length > 0) {
             res.status(200).json({
-                'message': db_response.message
+                'message': db_response.message,
+                'status': 'success'
             });
         }
         else {
             res.status(200).json({
-                'message': db_response.message
+                'message': db_response.message,
+                'status': 'failed'
             });
         }
     }
     else {
         res.status(500).json({
-            'message': db_response.message
+            'message': db_response.message,
+            'status': 'failed'
         });
     }
 }

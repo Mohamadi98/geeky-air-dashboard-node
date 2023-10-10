@@ -14,5 +14,13 @@ integrations TEXT[],
 title VARCHAR(200),
 created_at TIMESTAMP,
 updated_at TIMESTAMP,
+recurring_for VARCHAR(50),
+recurring_on TEXT[],
+recurring_every INT,
+time VARCHAR(10),
+u_start_date VARCHAR(20),
+u_end_date VARCHAR(20),
+u_selected_days TEXT[],
+u_scheduled_date VARCHAR(20)
 expire_at DATE
 );

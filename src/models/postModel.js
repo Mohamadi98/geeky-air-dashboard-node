@@ -49,6 +49,30 @@ const post_agent = db_client.define('post', {
       title: {
         type: DataTypes.STRING
       },
+      recurring_for: {
+        type: DataTypes.STRING
+      },
+      recurring_on: {
+        type: DataTypes.ARRAY(DataTypes.STRING)
+      },
+      recurring_every: {
+        type: DataTypes.INTEGER
+      },
+      time: {
+        type: DataTypes.STRING
+      },
+      u_start_date: {
+        type: DataTypes.STRING
+      },
+      u_end_date: {
+        type: DataTypes.STRING
+      },
+      u_selected_days: {
+        type: DataTypes.ARRAY(DataTypes.STRING)
+      },
+      u_scheduled_date: {
+        type: DataTypes.STRING
+      },
       expire_at: {
         type: DataTypes.DATE
       }

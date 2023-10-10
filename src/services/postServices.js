@@ -189,7 +189,8 @@ const delete_by_id = async (id) => {
                 id: id
             }
         });
-        if (result.length > 0) {
+        console.log(result);
+        if (result > 0) {
             return {
                 status: 'success',
                 data: result,
