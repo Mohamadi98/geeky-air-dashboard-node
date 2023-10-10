@@ -366,7 +366,7 @@ const delete_post = async (req, res) => {
     const { id } = req.params;
     const db_response = await postServices.delete_by_id(id);
     if (db_response.status === 'success') {
-        if (db_response.data.length > 0) {
+        if (db_response.data > 0) {
             res.status(200).json({
                 'message': db_response.message,
                 'status': 'success'
