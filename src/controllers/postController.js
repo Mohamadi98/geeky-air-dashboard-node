@@ -70,18 +70,8 @@ const add_post = async (req, res) => {
             title: request_data['title'],
             integrations: request_data['integrations'],
             dates: [newDateTime],
-            websites: [{
-                "website_name": "post-your-biz4.vercel.app",
-                "website_value": true
-            },
-            {
-                "website_name": "post-your-biz1.vercel.app",
-                "website_value": true
-            },
-            {
-                "website_name": "post-your-biz2.vercel.app",
-                "website_value": true
-            }],
+            time: request_data['time'],
+            u_scheduled_date: request_data['u_scheduled_date'],
         }
 
         const db_response = await postServices.create(data);
@@ -121,19 +111,13 @@ const add_post = async (req, res) => {
                 title: request_data['title'],
                 integrations: request_data['integrations'],
                 dates: dates,
+                recurring_every: request_data['recurring_every'],
+                recurring_for: request_data['recurring_for'],
+                recurring_on: request_data['recurring_on'],
+                u_start_date: request_data['u_start_date'],
+                u_end_date: request_data['u_end_date'],
+                u_selected_days: request_data['u_selected_days'],
                 expire_at: endingDate,
-                websites: [{
-                    "website_name": "post-your-biz4.vercel.app",
-                    "website_value": true
-                },
-                {
-                    "website_name": "post-your-biz1.vercel.app",
-                    "website_value": true
-                },
-                {
-                    "website_name": "post-your-biz2.vercel.app",
-                    "website_value": true
-                }],
             }
             const db_response = await postServices.create(data);
             if (db_response.id) {
@@ -169,19 +153,11 @@ const add_post = async (req, res) => {
                 title: request_data['title'],
                 integrations: request_data['integrations'],
                 dates: dates,
+                recurring_every: request_data['recurring_every'],
+                recurring_for: request_data['recurring_for'],
+                u_end_date: request_data['u_end_date'],
+                u_selected_days: request_data['u_start_date'],
                 expire_at: endingDate,
-                websites: [{
-                    "website_name": "post-your-biz4.vercel.app",
-                    "website_value": true
-                },
-                {
-                    "website_name": "post-your-biz1.vercel.app",
-                    "website_value": true
-                },
-                {
-                    "website_name": "post-your-biz2.vercel.app",
-                    "website_value": true
-                }],
             }
             const db_response = await postServices.create(data);
             if (db_response.id) {
@@ -215,19 +191,11 @@ const add_post = async (req, res) => {
                 bold: request_data['bold'],
                 title: request_data['title'],
                 integrations: request_data['integrations'],
+                recurring_every: request_data['recurring_every'],
+                recurring_for: request_data['recurring_for'],
+                u_end_date: request_data['u_end_date'],
+                u_selected_days: request_data['u_start_date'],
                 dates: dates,
-                websites: [{
-                    "website_name": "post-your-biz4.vercel.app",
-                    "website_value": true
-                },
-                {
-                    "website_name": "post-your-biz1.vercel.app",
-                    "website_value": true
-                },
-                {
-                    "website_name": "post-your-biz2.vercel.app",
-                    "website_value": true
-                }],
             }
 
             const db_response = await postServices.create(data);
@@ -263,6 +231,8 @@ const add_post = async (req, res) => {
             bold: request_data['bold'],
             title: request_data['title'],
             dates: [newDateTime],
+            time: request_data['time'],
+            u_scheduled_date: request_data['u_scheduled_date'],
             integrations: request_data['integrations'],
         }
 
