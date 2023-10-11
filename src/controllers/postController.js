@@ -605,7 +605,7 @@ const get_filtered_posts = async (req, res) => {
     const db_response = await postServices.fetch_filter_posts(type);
     if (type === 'publish') {
         for (let i = 0; i < db_response.data.length; i++) {
-            const created_at = db_response.data[i].dataValues['created_at'];
+            const created_at = db_response.data[i].dataValues['updated_at'];
             const created_at_est = moment(created_at).tz('America/New_York');
             const formattedDate = dateServices.modifyDateFormat(created_at_est);
             db_response.data[i].dataValues['publishTime'] = formattedDate;
@@ -633,7 +633,7 @@ const get_filtered_posts_by_id = async (req, res) => {
     const db_response = await postServices.fetch_filter_post_by_id(type, id);
     if (type === 'publish') {
         for (let i = 0; i < db_response.data.length; i++) {
-            const created_at = db_response.data[i].dataValues['created_at'];
+            const created_at = db_response.data[i].dataValues['updated_at'];
             const created_at_est = moment(created_at).tz('America/New_York');
             const formattedDate = dateServices.modifyDateFormat(created_at_est);
             db_response.data[i].dataValues['publishTime'] = formattedDate;
