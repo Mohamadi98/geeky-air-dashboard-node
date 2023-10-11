@@ -285,6 +285,7 @@ const update_post = async (req, res) => {
             italic: request_data['italic'],
             bold: request_data['bold'],
             title: request_data['title'],
+            dates: [],
             integrations: request_data['integrations'],
         }
 
