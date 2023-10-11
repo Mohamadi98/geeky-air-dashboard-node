@@ -416,6 +416,7 @@ const update_post = async (req, res) => {
             const time = request_data['time']
             const dates = recurringServices.createRecurringDatesByMonth(daysOfTheMonth,
                 everyMonth, endingDate, time);
+            console.log(dates);
 
             const data = {
                 business_id: request_data['business_id'],
