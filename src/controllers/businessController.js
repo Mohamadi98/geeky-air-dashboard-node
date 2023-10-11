@@ -243,22 +243,12 @@ const Mohamadi = async (req, res) => {
 }
 
 const playGround = async (req, res) => {
-    const db_response = await postServices.delete_by_id(77);
-    if (db_response > 0) {
-        res.status(200).json({
-            'message': 'post deleted successfuly'
-        });
-    }
-    else if (db_response === 0) {
-        res.status(400).json({
-            'message': 'No post associated with this id'
-        });
-    }
-    else {
-        res.status(500).json({
-            'message': db_response
-        });
-    }
+    const startDate = '2023-10-09';
+    const endDate = '2023-10-11';
+    const result = await postServices.getPostInTimeSpan(startDate, endDate);
+    res.status(200).json({
+        'data': result.data
+    });
 }
 
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business)

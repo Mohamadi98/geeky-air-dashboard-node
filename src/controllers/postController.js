@@ -111,6 +111,7 @@ const add_post = async (req, res) => {
                 title: request_data['title'],
                 integrations: request_data['integrations'],
                 dates: dates,
+                time: request_data['time'],
                 recurring_every: request_data['recurring_every'],
                 recurring_for: request_data['recurring_for'],
                 recurring_on: request_data['recurring_on'],
@@ -153,6 +154,7 @@ const add_post = async (req, res) => {
                 title: request_data['title'],
                 integrations: request_data['integrations'],
                 dates: dates,
+                time: request_data['time'],
                 recurring_every: request_data['recurring_every'],
                 recurring_for: request_data['recurring_for'],
                 u_end_date: request_data['u_end_date'],
@@ -191,6 +193,7 @@ const add_post = async (req, res) => {
                 bold: request_data['bold'],
                 title: request_data['title'],
                 integrations: request_data['integrations'],
+                time: request_data['time'],
                 recurring_every: request_data['recurring_every'],
                 recurring_for: request_data['recurring_for'],
                 u_end_date: request_data['u_end_date'],
@@ -255,6 +258,305 @@ const add_post = async (req, res) => {
     }
 }
 
+const update_post = async (req, res) => {
+    const id = req.body.id;
+    const request_data = req.body;
+    delete request_data['id'];
+    if (request_data['business_id'] === undefined) {
+        res.status(400).json({
+            'message': 'business id is undefined'
+        });
+    }
+    if (request_data['images'].length > 0) {
+        request_data['images'] = await S3Services.upload_post_images(request_data['business_id'], request_data['images']);
+    }
+    if (request_data['video'] !== "") {
+        request_data['video'] = await S3Services.upload_post_video(request_data['video'], request_data['business_id']);
+    }
+    if (request_data['type'] === 'publish') {
+
+        const data = {
+            business_id: request_data['business_id'],
+            images: request_data['images'],
+            video: request_data['video'],
+            content: request_data['content'],
+            status: 'published',
+            type: request_data['type'],
+            italic: request_data['italic'],
+            bold: request_data['bold'],
+            title: request_data['title'],
+            integrations: request_data['integrations'],
+        }
+
+        const db_response = await postServices.update_post(data, id);
+        if (db_response > 0) {
+            res.status(200).json({
+                'message': 'post updated successfuly!',
+                'status': 'success'
+            });
+        }
+        else if (db_response === 0) {
+            res.status(200).json({
+                'message': 'No rows found with this id',
+                'status': 'failed'
+            })
+        }
+        else {
+            res.status(500).json({
+                'message': db_response,
+                'status': 'failed'
+            });
+        }
+
+    }
+
+    else if (request_data['type'] === 'scheduled') {
+        const date = request_data['schedule_date'];
+        const time = request_data['time'];
+        const newDateTime = dateServices.create_est_with_date_and_time(date, time);
+
+        const data = {
+            business_id: request_data['business_id'],
+            images: request_data['images'],
+            video: request_data['video'],
+            content: request_data['content'],
+            status: 'scheduled',
+            type: request_data['type'],
+            italic: request_data['italic'],
+            bold: request_data['bold'],
+            title: request_data['title'],
+            integrations: request_data['integrations'],
+            dates: [newDateTime],
+            time: request_data['time'],
+            u_scheduled_date: request_data['u_scheduled_date'],
+        }
+
+        const db_response = await postServices.update_post(data, id);
+        if (db_response > 0) {
+            res.status(200).json({
+                'message': 'post updated successfuly!',
+                'status': 'success'
+            });
+        }
+        else if (db_response === 0) {
+            res.status(200).json({
+                'message': 'No rows found with this id',
+                'status': 'failed'
+            })
+        }
+        else {
+            res.status(500).json({
+                'message': db_response,
+                'status': 'failed'
+            });
+        }
+    }
+
+    else if (request_data['type'] === 'recurring') {
+        if (request_data['recurring_for'] === 'Week') {
+            const daysOfTheWeek = dateServices.convert_days_arr_to_num_arr(request_data['recurring_on']);
+            const everyWeek = request_data['recurring_every'];
+            const startingDate = dateServices
+                .create_est_with_date_and_time(request_data['start_date'],
+                    request_data['time']);
+            const endingDate = dateServices
+                .create_est_with_date_and_time(request_data['end_date'],
+                    request_data['time']);
+            const dates = recurringServices.createRecurringDatesByWeek(daysOfTheWeek,
+                everyWeek, startingDate, endingDate);
+
+            const data = {
+                business_id: request_data['business_id'],
+                images: request_data['images'],
+                video: request_data['video'],
+                content: request_data['content'],
+                status: 'scheduled',
+                type: request_data['type'],
+                italic: request_data['italic'],
+                bold: request_data['bold'],
+                title: request_data['title'],
+                integrations: request_data['integrations'],
+                dates: dates,
+                time: request_data['time'],
+                recurring_every: request_data['recurring_every'],
+                recurring_for: request_data['recurring_for'],
+                recurring_on: request_data['recurring_on'],
+                u_start_date: request_data['u_start_date'],
+                u_end_date: request_data['u_end_date'],
+                u_selected_days: request_data['u_selected_days'],
+                expire_at: endingDate,
+            }
+            const db_response = await postServices.update_post(data, id);
+            if (db_response > 0) {
+                res.status(200).json({
+                    'message': 'post updated successfuly!',
+                    'status': 'success'
+                });
+            }
+            else if (db_response === 0) {
+                res.status(200).json({
+                    'message': 'No rows found with this id',
+                    'status': 'failed'
+                })
+            }
+            else {
+                res.status(500).json({
+                    'message': db_response,
+                    'status': 'failed'
+                });
+            }
+        }
+        else if (request_data['recurring_for'] === 'Month') {
+            const daysOfTheMonth = request_data['selected_days'];
+            const everyMonth = request_data['recurring_every'];
+            const endingDate = dateServices
+                .create_est_with_date_and_time(request_data['end_date'],
+                    request_data['time']);
+            const time = request_data['time']
+            const dates = recurringServices.createRecurringDatesByMonth(daysOfTheMonth,
+                everyMonth, endingDate, time);
+
+            const data = {
+                business_id: request_data['business_id'],
+                images: request_data['images'],
+                video: request_data['video'],
+                content: request_data['content'],
+                status: 'scheduled',
+                type: request_data['type'],
+                italic: request_data['italic'],
+                bold: request_data['bold'],
+                title: request_data['title'],
+                integrations: request_data['integrations'],
+                dates: dates,
+                time: request_data['time'],
+                recurring_every: request_data['recurring_every'],
+                recurring_for: request_data['recurring_for'],
+                u_end_date: request_data['u_end_date'],
+                u_selected_days: request_data['u_start_date'],
+                expire_at: endingDate,
+            }
+            const db_response = await postServices.update_post(data, id);
+            if (db_response > 0) {
+                res.status(200).json({
+                    'message': 'post updated successfuly!',
+                    'status': 'success'
+                });
+            }
+            else if (db_response === 0) {
+                res.status(200).json({
+                    'message': 'No rows found with this id',
+                    'status': 'failed'
+                })
+            }
+            else {
+                res.status(500).json({
+                    'message': db_response,
+                    'status': 'failed'
+                });
+            }
+        }
+        else if (request_data['recurring_for'] === 'Year') {
+            const yearDates = request_data['selected_days'];
+            const time = request_data['time'];
+            const dates = [];
+            for (const date of yearDates) {
+                dates.push(dateServices.create_est_with_date_and_time(
+                    date, time));
+            }
+
+            const data = {
+                business_id: request_data['business_id'],
+                images: request_data['images'],
+                video: request_data['video'],
+                content: request_data['content'],
+                status: 'scheduled',
+                type: request_data['type'],
+                italic: request_data['italic'],
+                bold: request_data['bold'],
+                title: request_data['title'],
+                integrations: request_data['integrations'],
+                time: request_data['time'],
+                recurring_every: request_data['recurring_every'],
+                recurring_for: request_data['recurring_for'],
+                u_end_date: request_data['u_end_date'],
+                u_selected_days: request_data['u_start_date'],
+                dates: dates,
+            }
+
+            const db_response = await postServices.update_post(data, id);
+            if (db_response > 0) {
+                res.status(200).json({
+                    'message': 'post updated successfuly!',
+                    'status': 'success'
+                });
+            }
+            else if (db_response === 0) {
+                res.status(200).json({
+                    'message': 'No rows found with this id',
+                    'status': 'failed'
+                })
+            }
+            else {
+                res.status(500).json({
+                    'message': db_response,
+                    'status': 'failed'
+                });
+            }
+        }
+        else {
+            res.status(400).json({
+                'message': 'invalid recurrance type'
+            });
+        }
+    }
+
+    else if (request_data['type'] === 'draft') {
+        const date = request_data['schedule_date'];
+        const time = request_data['time'];
+        const newDateTime = dateServices.create_est_with_date_and_time(date, time);
+        const data = {
+            business_id: request_data['business_id'],
+            images: request_data['images'],
+            video: request_data['video'],
+            content: request_data['content'],
+            status: 'draft',
+            type: request_data['type'],
+            italic: request_data['italic'],
+            bold: request_data['bold'],
+            title: request_data['title'],
+            dates: [newDateTime],
+            time: request_data['time'],
+            u_scheduled_date: request_data['u_scheduled_date'],
+            integrations: request_data['integrations'],
+        }
+
+        const db_response = await postServices.update_post(data, id);
+        if (db_response > 0) {
+            res.status(200).json({
+                'message': 'post updated successfuly!',
+                'status': 'success'
+            });
+        }
+        else if (db_response === 0) {
+            res.status(200).json({
+                'message': 'No rows found with this id',
+                'status': 'failed'
+            })
+        }
+        else {
+            res.status(500).json({
+                'message': db_response,
+                'status': 'failed'
+            });
+        }
+    }
+    else {
+        res.status(400).json({
+            'message': 'invalid post type'
+        });
+    }
+}
+
 const get_post_by_id = async (req, res) => {
     const { id } = req.params;
     const db_response = await postServices.fetch_post_by_id(id);
@@ -294,7 +596,8 @@ const get_posts_website_request = async (req, res) => {
 }
 
 const get_filtered_posts = async (req, res) => {
-    const type = req.body.type;
+    let type = req.body.type;
+    type = type.toLowerCase();
     const db_response = await postServices.fetch_filter_posts(type);
     if (type === 'draft' || type === 'scheduled') {
         for (let i = 0; i < db_response.data.length; i++) {
@@ -316,8 +619,9 @@ const get_filtered_posts = async (req, res) => {
 }
 
 const get_filtered_posts_by_id = async (req, res) => {
-    const {id} = req.params;
-    const {type} = req.body;
+    const { id } = req.params;
+    let { type } = req.body;
+    type = type.toLowerCase();
     const db_response = await postServices.fetch_filter_post_by_id(type, id);
 
     if (db_response.status === 'success') {
@@ -358,6 +662,7 @@ const delete_post = async (req, res) => {
 }
 
 postRouter.post('/add-post', middlewares.check_active, add_post)
+postRouter.put('/update-post', middlewares.check_active, update_post)
 postRouter.get('/get-all-posts-website-request/:website_name', get_posts_website_request)
 postRouter.get('/get-post-website_request/:id', get_post_by_id)
 postRouter.post('/get-filtered-posts', get_filtered_posts)

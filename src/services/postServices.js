@@ -1,7 +1,7 @@
 const business_agent = require('../models/businessModel')
 const post_agent = require('../models/postModel')
 const business_services = require('../services/businessServices')
-const { Op, sequelize, where } = require('sequelize')
+const { Op, sequelize } = require('sequelize')
 const dateServices = require('../services/dateServices')
 
 const create = async (data) => {
@@ -110,6 +110,35 @@ const seacrh_by_date = async (dateTime) => {
     }
 }
 
+const getPostInTimeSpan = async (startDate, endDate) => {
+    try {
+        const posts = await post_agent.findAll({
+            where: post_agent.sequelize.literal(
+                `ARRAY(SELECT date_trunc('day', unnest("dates")) FROM "post") 
+                BETWEEN '${startDate}' AND '${endDate}'`
+            )
+        });
+        if (posts.length > 0) {
+            return {
+                status: 'success',
+                data: posts
+            }
+        }
+        else if (posts.length === 0) {
+            return {
+                status: 'success',
+                data: []
+            }
+        }
+
+    } catch (error) {
+        return {
+            status: 'error',
+            message: `error while executing search within a date span: ${error}`
+        }
+    }
+}
+
 const update_post = async (post_data, id) => {
     try {
         const [affectedRowsCount, affectedRows] = await post_agent.update(post_data,
@@ -202,7 +231,7 @@ const delete_by_id = async (id) => {
                 status: 'success',
                 data: [],
                 message: `No post associated with this id: ${id}`
-            }; 
+            };
         }
     }
     catch (error) {
@@ -223,5 +252,6 @@ module.exports = {
     fetch_post_by_id: fetch_post_by_id,
     fetch_filter_posts: fetch_filter_posts,
     fetch_filter_post_by_id: fetch_filter_post_by_id,
-    delete_by_id: delete_by_id
+    delete_by_id: delete_by_id,
+    getPostInTimeSpan: getPostInTimeSpan
 }
