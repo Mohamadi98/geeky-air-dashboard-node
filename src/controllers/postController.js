@@ -598,12 +598,16 @@ const get_posts_website_request = async (req, res) => {
 const get_filtered_posts = async (req, res) => {
     let type = req.body.type;
     type = type.toLowerCase();
+    if (type === 'posted') {
+        type = 'publish'
+    }
     const db_response = await postServices.fetch_filter_posts(type);
-    if (type === 'draft' || type === 'scheduled') {
+    if (type === 'publish') {
         for (let i = 0; i < db_response.data.length; i++) {
-            console.log(db_response.data[i].dataValues['dates'][0]);
-            const displayedTime = dateServices.modifyDateFormat(db_response.data[i].dataValues['dates'][0]);
-            db_response.data[i].dataValues['displayedTime'] = displayedTime;
+            const created_at = db_response.data[i].dataValues['created_at'];
+            const created_at_est = moment(created_at).tz('America/New_York');
+            const formattedDate = dateServices.modifyDateFormat(created_at_est);
+            db_response.data[i].dataValues['publishTime'] = formattedDate;
         }
     }
     if (db_response.status === 'success') {
@@ -622,8 +626,18 @@ const get_filtered_posts_by_id = async (req, res) => {
     const { id } = req.params;
     let { type } = req.body;
     type = type.toLowerCase();
+    if (type === 'posted') {
+        type = 'publish'
+    }
     const db_response = await postServices.fetch_filter_post_by_id(type, id);
-
+    if (type === 'publish') {
+        for (let i = 0; i < db_response.data.length; i++) {
+            const created_at = db_response.data[i].dataValues['created_at'];
+            const created_at_est = moment(created_at).tz('America/New_York');
+            const formattedDate = dateServices.modifyDateFormat(created_at_est);
+            db_response.data[i].dataValues['publishTime'] = formattedDate;
+        }
+    }
     if (db_response.status === 'success') {
         res.status(200).json({
             'data': db_response.data
