@@ -34,7 +34,7 @@ const createRecurringDatesByMonth = (daysOfTheMonth, everyMonth, endingDate, tim
     let date = moment(startingDate).tz('America/New_York');
 
     while (date.isSameOrBefore(eDate, 'day')) {
-      if (date.date() === day) {
+      if (date.date() == day) {
         const isoString = date.toISOString(); // Convert date to ISO string
         result.push(isoString);
         date.add(28 * everyMonth, 'days');

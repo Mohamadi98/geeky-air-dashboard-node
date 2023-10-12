@@ -259,6 +259,7 @@ const add_post = async (req, res) => {
 }
 
 const update_post = async (req, res) => {
+    console.log('we reached the update post endpoint');
     const id = req.body.id;
     const request_data = req.body;
     delete request_data['id'];
