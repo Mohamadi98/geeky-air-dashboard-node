@@ -18,7 +18,7 @@ const add_post = async (req, res) => {
             'message': 'business id is undefined'
         });
     }
-    const _24Htime = dateServices.convertFrom12HformatTo24Hformat(request_data['time']);
+    const time = request_data['time'];
     if (request_data['images'].length > 0) {
         request_data['images'] = await S3Services.upload_post_images(request_data['business_id'], request_data['images']);
     }
@@ -57,7 +57,7 @@ const add_post = async (req, res) => {
     else if (request_data['type'] === 'scheduled') {
         const date = request_data['schedule_date'];
 
-        const newDateTime = dateServices.create_est_with_date_and_time(date, _24Htime);
+        const newDateTime = dateServices.create_est_with_date_and_time(date, time);
 
         const data = {
             business_id: request_data['business_id'],
@@ -93,10 +93,10 @@ const add_post = async (req, res) => {
             const everyWeek = request_data['recurring_every'];
             const startingDate = dateServices
                 .create_est_with_date_and_time(request_data['start_date'],
-                    _24Htime);
+                    time);
             const endingDate = dateServices
                 .create_est_with_date_and_time(request_data['end_date'],
-                    _24Htime);
+                    time);
             const dates = recurringServices.createRecurringDatesByWeek(daysOfTheWeek,
                 everyWeek, startingDate, endingDate);
 
@@ -138,9 +138,9 @@ const add_post = async (req, res) => {
             const everyMonth = request_data['recurring_every'];
             const endingDate = dateServices
                 .create_est_with_date_and_time(request_data['end_date'],
-                    _24Htime);
+                    time);
             const dates = recurringServices.createRecurringDatesByMonth(daysOfTheMonth,
-                everyMonth, endingDate, _24Htime);
+                everyMonth, endingDate, time);
 
             const data = {
                 business_id: request_data['business_id'],
@@ -178,7 +178,7 @@ const add_post = async (req, res) => {
             const dates = [];
             for (const date of yearDates) {
                 dates.push(dateServices.create_est_with_date_and_time(
-                    date, _24Htime));
+                    date, time));
             }
 
             const data = {
@@ -220,7 +220,7 @@ const add_post = async (req, res) => {
     }
     else if (request_data['type'] === 'draft') {
         const date = request_data['schedule_date'];
-        const newDateTime = dateServices.create_est_with_date_and_time(date, _24Htime);
+        const newDateTime = dateServices.create_est_with_date_and_time(date, time);
         const data = {
             business_id: request_data['business_id'],
             images: request_data['images'],
@@ -265,7 +265,7 @@ const update_post = async (req, res) => {
             'message': 'business id is undefined'
         });
     }
-    const _24Htime = dateServices.convertFrom12HformatTo24Hformat(request_data['time']);
+    const time = request_data['time'];
     if (request_data['images'].length > 0) {
         request_data['images'] = await S3Services.upload_post_images(request_data['business_id'], request_data['images']);
     }
@@ -320,7 +320,7 @@ const update_post = async (req, res) => {
 
     else if (request_data['type'] === 'scheduled') {
         const date = request_data['schedule_date'];
-        const newDateTime = dateServices.create_est_with_date_and_time(date, _24Htime);
+        const newDateTime = dateServices.create_est_with_date_and_time(date, time);
 
         const data = {
             business_id: request_data['business_id'],
@@ -371,10 +371,10 @@ const update_post = async (req, res) => {
             const everyWeek = request_data['recurring_every'];
             const startingDate = dateServices
                 .create_est_with_date_and_time(request_data['start_date'],
-                    _24Htime);
+                    time);
             const endingDate = dateServices
                 .create_est_with_date_and_time(request_data['end_date'],
-                    _24Htime);
+                    time);
             const dates = recurringServices.createRecurringDatesByWeek(daysOfTheWeek,
                 everyWeek, startingDate, endingDate);
 
@@ -425,9 +425,9 @@ const update_post = async (req, res) => {
             const everyMonth = request_data['recurring_every'];
             const endingDate = dateServices
                 .create_est_with_date_and_time(request_data['end_date'],
-                    _24Htime);
+                    time);
             const dates = recurringServices.createRecurringDatesByMonth(daysOfTheMonth,
-                everyMonth, endingDate, _24Htime);
+                everyMonth, endingDate, time);
             console.log(dates);
 
             const data = {
@@ -477,7 +477,7 @@ const update_post = async (req, res) => {
             const dates = [];
             for (const date of yearDates) {
                 dates.push(dateServices.create_est_with_date_and_time(
-                    date, _24Htime));
+                    date, time));
             }
 
             const data = {
@@ -531,7 +531,7 @@ const update_post = async (req, res) => {
 
     else if (request_data['type'] === 'draft') {
         const date = request_data['schedule_date'];
-        const newDateTime = dateServices.create_est_with_date_and_time(date, _24Htime);
+        const newDateTime = dateServices.create_est_with_date_and_time(date, time);
         const data = {
             business_id: request_data['business_id'],
             images: request_data['images'],
