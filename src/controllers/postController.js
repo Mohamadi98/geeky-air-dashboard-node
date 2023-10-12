@@ -18,6 +18,7 @@ const add_post = async (req, res) => {
             'message': 'business id is undefined'
         });
     }
+    const _24Htime = dateServices.convertFrom12HformatTo24Hformat(request_data['time']);
     if (request_data['images'].length > 0) {
         request_data['images'] = await S3Services.upload_post_images(request_data['business_id'], request_data['images']);
     }
@@ -55,8 +56,8 @@ const add_post = async (req, res) => {
     }
     else if (request_data['type'] === 'scheduled') {
         const date = request_data['schedule_date'];
-        const time = request_data['time'];
-        const newDateTime = dateServices.create_est_with_date_and_time(date, time);
+
+        const newDateTime = dateServices.create_est_with_date_and_time(date, _24Htime);
 
         const data = {
             business_id: request_data['business_id'],
@@ -92,10 +93,10 @@ const add_post = async (req, res) => {
             const everyWeek = request_data['recurring_every'];
             const startingDate = dateServices
                 .create_est_with_date_and_time(request_data['start_date'],
-                    request_data['time']);
+                    _24Htime);
             const endingDate = dateServices
                 .create_est_with_date_and_time(request_data['end_date'],
-                    request_data['time']);
+                    _24Htime);
             const dates = recurringServices.createRecurringDatesByWeek(daysOfTheWeek,
                 everyWeek, startingDate, endingDate);
 
@@ -137,10 +138,9 @@ const add_post = async (req, res) => {
             const everyMonth = request_data['recurring_every'];
             const endingDate = dateServices
                 .create_est_with_date_and_time(request_data['end_date'],
-                    request_data['time']);
-            const time = request_data['time']
+                    _24Htime);
             const dates = recurringServices.createRecurringDatesByMonth(daysOfTheMonth,
-                everyMonth, endingDate, time);
+                everyMonth, endingDate, _24Htime);
 
             const data = {
                 business_id: request_data['business_id'],
@@ -158,7 +158,7 @@ const add_post = async (req, res) => {
                 recurring_every: request_data['recurring_every'],
                 recurring_for: request_data['recurring_for'],
                 u_end_date: request_data['u_end_date'],
-                u_selected_days: request_data['u_start_date'],
+                u_selected_days: request_data['U-selected_days'],
                 expire_at: endingDate,
             }
             const db_response = await postServices.create(data);
@@ -175,11 +175,10 @@ const add_post = async (req, res) => {
         }
         else if (request_data['recurring_for'] === 'Year') {
             const yearDates = request_data['selected_days'];
-            const time = request_data['time'];
             const dates = [];
             for (const date of yearDates) {
                 dates.push(dateServices.create_est_with_date_and_time(
-                    date, time));
+                    date, _24Htime));
             }
 
             const data = {
@@ -221,8 +220,7 @@ const add_post = async (req, res) => {
     }
     else if (request_data['type'] === 'draft') {
         const date = request_data['schedule_date'];
-        const time = request_data['time'];
-        const newDateTime = dateServices.create_est_with_date_and_time(date, time);
+        const newDateTime = dateServices.create_est_with_date_and_time(date, _24Htime);
         const data = {
             business_id: request_data['business_id'],
             images: request_data['images'],
@@ -259,7 +257,6 @@ const add_post = async (req, res) => {
 }
 
 const update_post = async (req, res) => {
-    console.log('we reached the update post endpoint');
     const id = req.body.id;
     const request_data = req.body;
     delete request_data['id'];
@@ -268,6 +265,7 @@ const update_post = async (req, res) => {
             'message': 'business id is undefined'
         });
     }
+    const _24Htime = dateServices.convertFrom12HformatTo24Hformat(request_data['time']);
     if (request_data['images'].length > 0) {
         request_data['images'] = await S3Services.upload_post_images(request_data['business_id'], request_data['images']);
     }
@@ -287,6 +285,14 @@ const update_post = async (req, res) => {
             bold: request_data['bold'],
             title: request_data['title'],
             dates: [],
+            expire_at: "",
+            recurring_for: "",
+            recurring_on: "",
+            recurring_every: "",
+            u_start_date: "",
+            u_end_date: "",
+            u_selected_days: "",
+            u_scheduled_date: "",
             integrations: request_data['integrations'],
         }
 
@@ -330,6 +336,12 @@ const update_post = async (req, res) => {
             integrations: request_data['integrations'],
             dates: [newDateTime],
             time: request_data['time'],
+            recurring_for: "",
+            recurring_for: "",
+            recurring_every: "",
+            u_start_date: "",
+            u_end_date: "",
+            u_selected_days: "",
             u_scheduled_date: request_data['u_scheduled_date'],
         }
 
@@ -385,7 +397,8 @@ const update_post = async (req, res) => {
                 recurring_on: request_data['recurring_on'],
                 u_start_date: request_data['u_start_date'],
                 u_end_date: request_data['u_end_date'],
-                u_selected_days: request_data['u_selected_days'],
+                u_selected_days: "",
+                u_scheduled_date: "",
                 expire_at: endingDate,
             }
             const db_response = await postServices.update_post(data, id);
@@ -434,8 +447,11 @@ const update_post = async (req, res) => {
                 time: request_data['time'],
                 recurring_every: request_data['recurring_every'],
                 recurring_for: request_data['recurring_for'],
+                recurring_on: "",
+                u_start_day: "",
                 u_end_date: request_data['u_end_date'],
-                u_selected_days: request_data['u_start_date'],
+                u_selected_days: request_data['u_selected_days'],
+                u_scheduled_date: "",
                 expire_at: endingDate,
             }
             const db_response = await postServices.update_post(data, id);
@@ -481,8 +497,11 @@ const update_post = async (req, res) => {
                 time: request_data['time'],
                 recurring_every: request_data['recurring_every'],
                 recurring_for: request_data['recurring_for'],
+                recurring_on: "",
+                u_start_date: "",
                 u_end_date: request_data['u_end_date'],
-                u_selected_days: request_data['u_start_date'],
+                u_selected_days: request_data['u_selected_days'],
+                u_scheduled_date: "",
                 dates: dates,
             }
 
@@ -527,10 +546,16 @@ const update_post = async (req, res) => {
             italic: request_data['italic'],
             bold: request_data['bold'],
             title: request_data['title'],
+            integrations: request_data['integrations'],
             dates: [newDateTime],
             time: request_data['time'],
+            recurring_for: "",
+            recurring_for: "",
+            recurring_every: "",
+            u_start_date: "",
+            u_end_date: "",
+            u_selected_days: "",
             u_scheduled_date: request_data['u_scheduled_date'],
-            integrations: request_data['integrations'],
         }
 
         const db_response = await postServices.update_post(data, id);
