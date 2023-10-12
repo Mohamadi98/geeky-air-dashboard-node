@@ -459,7 +459,7 @@ const update_post = async (req, res) => {
             }
         }
         else if (request_data['recurring_for'] === 'Year') {
-            const yearDates = request_data['selected_days'];
+            const yearDates = request_data['start_date'];
             const time = request_data['time'];
             const dates = [];
             for (const date of yearDates) {
