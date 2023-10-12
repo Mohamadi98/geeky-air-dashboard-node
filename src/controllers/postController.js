@@ -320,8 +320,7 @@ const update_post = async (req, res) => {
 
     else if (request_data['type'] === 'scheduled') {
         const date = request_data['schedule_date'];
-        const time = request_data['time'];
-        const newDateTime = dateServices.create_est_with_date_and_time(date, time);
+        const newDateTime = dateServices.create_est_with_date_and_time(date, _24Htime);
 
         const data = {
             business_id: request_data['business_id'],
@@ -372,10 +371,10 @@ const update_post = async (req, res) => {
             const everyWeek = request_data['recurring_every'];
             const startingDate = dateServices
                 .create_est_with_date_and_time(request_data['start_date'],
-                    request_data['time']);
+                    _24Htime);
             const endingDate = dateServices
                 .create_est_with_date_and_time(request_data['end_date'],
-                    request_data['time']);
+                    _24Htime);
             const dates = recurringServices.createRecurringDatesByWeek(daysOfTheWeek,
                 everyWeek, startingDate, endingDate);
 
@@ -426,10 +425,9 @@ const update_post = async (req, res) => {
             const everyMonth = request_data['recurring_every'];
             const endingDate = dateServices
                 .create_est_with_date_and_time(request_data['end_date'],
-                    request_data['time']);
-            const time = request_data['time']
+                    _24Htime);
             const dates = recurringServices.createRecurringDatesByMonth(daysOfTheMonth,
-                everyMonth, endingDate, time);
+                everyMonth, endingDate, _24Htime);
             console.log(dates);
 
             const data = {
@@ -476,11 +474,10 @@ const update_post = async (req, res) => {
         }
         else if (request_data['recurring_for'] === 'Year') {
             const yearDates = request_data['start_date'];
-            const time = request_data['time'];
             const dates = [];
             for (const date of yearDates) {
                 dates.push(dateServices.create_est_with_date_and_time(
-                    date, time));
+                    date, _24Htime));
             }
 
             const data = {
@@ -534,8 +531,7 @@ const update_post = async (req, res) => {
 
     else if (request_data['type'] === 'draft') {
         const date = request_data['schedule_date'];
-        const time = request_data['time'];
-        const newDateTime = dateServices.create_est_with_date_and_time(date, time);
+        const newDateTime = dateServices.create_est_with_date_and_time(date, _24Htime);
         const data = {
             business_id: request_data['business_id'],
             images: request_data['images'],
