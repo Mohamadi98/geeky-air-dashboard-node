@@ -112,7 +112,6 @@ const seacrh_by_date = async (dateTime) => {
 
 const getPostsByDateAndType = async (startDate, endDate) => {
     try {
-        console.log('we are at getPostsByDateAndType');
         const posts = await post_agent.findAll({
             where: {
                 [Op.or]: [
@@ -134,10 +133,12 @@ const getPostsByDateAndType = async (startDate, endDate) => {
                 ]
             }
         });
-        return {
-            status: 'success',
-            data: posts
-        };
+        if (posts.length >= 0) {
+            return {
+                status: 'success',
+                data: posts
+            };
+        }
     } catch (error) {
         return {
             status: 'failed',

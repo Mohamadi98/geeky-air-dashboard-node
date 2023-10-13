@@ -714,6 +714,21 @@ const delete_multiple_posts = async (req, res) => {
     }
 }
 
+const get_posts_by_date_and_type = async (req, res) => {
+    const { startDate, endDate } = req.body;
+    const db_response = await postServices.getPostsByDateAndType(startDate, endDate);
+    if (db_response.status === 'success') {
+        res.status(200).json({
+            'data': db_response.data
+        });
+    }
+    else {
+        res.status(500).json({
+            error_message: db_response.message
+        })
+    }
+}
+
 postRouter.post('/add-post', middlewares.check_active, add_post)
 postRouter.put('/update-post', middlewares.check_active, update_post)
 postRouter.get('/get-all-posts-website-request/:website_name', get_posts_website_request)
@@ -722,5 +737,6 @@ postRouter.post('/get-filtered-posts', get_filtered_posts)
 postRouter.post('/get-filtered-posts/:id', get_filtered_posts_by_id)
 postRouter.delete('/delete-post/:id', middlewares.check_active, delete_post)
 postRouter.delete('/delete-multiple-posts', middlewares.check_active, delete_multiple_posts)
+postRouter.post('/get-posts-by-date-and-type', get_posts_by_date_and_type)
 
 module.exports = postRouter;
