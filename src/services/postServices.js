@@ -61,6 +61,33 @@ const show_all_posts_website_request = async (website_name) => {
     }
 }
 
+const get_posts_by_business_id_website_request = async (website_name, business_id) => {
+    const db_response = await business_services.posts_permission_checker(business_id, website_name);
+    if (db_response.length > 0) {
+        const posts = await post_agent.findAll({
+            include: {
+                model: business_agent,
+                attributes: ['name', 'logo'],
+                required: true,
+            },
+            where: {
+                status: 'published',
+                business_id: business_id
+            }
+        });
+        return {
+            status: 'success',
+            data: posts
+        }
+    }
+    else {
+        return {
+            status: 'failed',
+            message: 'business id is not found or posts are disabeled for this website'
+        }
+    }
+}
+
 const fetch_post_by_id = async (id) => {
     try {
         const post = await post_agent.findOne({
@@ -291,5 +318,6 @@ module.exports = {
     fetch_filter_post_by_id: fetch_filter_post_by_id,
     delete_by_id: delete_by_id,
     getPostsByDateAndType: getPostsByDateAndType,
-    deleteMultiplePosts: deleteMultiplePosts
+    deleteMultiplePosts: deleteMultiplePosts,
+    get_posts_by_business_id_website_request: get_posts_by_business_id_website_request
 }

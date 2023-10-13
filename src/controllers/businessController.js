@@ -243,12 +243,19 @@ const Mohamadi = async (req, res) => {
 }
 
 const playGround = async (req, res) => {
-    const IDs = [18, 19]
-    const result = await postServices.deleteMultiplePosts(IDs);
-    if (result.status === 'success'){
+    const business_id = 34;
+    const website_name = 'post-your-biz4.vercel.app';
+    const db_response = await postServices.get_posts_by_business_id_website_request(
+        website_name, business_id);
+    if (db_response.status === 'success') {
         res.status(200).json({
-            'data': result.message
-        });   
+            data: db_response.data
+        });
+    }
+    else {
+        res.status(500).json({
+            message: db_response.message
+        });
     }
 }
 
