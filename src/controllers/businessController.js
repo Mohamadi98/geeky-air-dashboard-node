@@ -243,12 +243,13 @@ const Mohamadi = async (req, res) => {
 }
 
 const playGround = async (req, res) => {
-    const startDate = '2023-10-09';
-    const endDate = '2023-10-11';
-    const result = await postServices.getPostInTimeSpan(startDate, endDate);
-    res.status(200).json({
-        'data': result.data
-    });
+    const IDs = [18, 19]
+    const result = await postServices.deleteMultiplePosts(IDs);
+    if (result.status === 'success'){
+        res.status(200).json({
+            'data': result.message
+        });   
+    }
 }
 
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business)

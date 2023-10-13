@@ -172,26 +172,6 @@ const modifyDateFormat = (date) => {
     return formattedDate
 }
 
-const convertFrom12HformatTo24Hformat = (time) => {
-    const [hour, minutes, PmOrAm] = time.split(/:| /);
-  
-    if (PmOrAm === 'PM') {
-        let _24Htime = parseInt(hour);
-        if (_24Htime !== 12) {
-            _24Htime += 12;
-        }
-        return `${_24Htime.toString().padStart(2, '0')}:${minutes}`;
-    } else {
-        let _24Htime = parseInt(hour);
-        if (_24Htime === 12) {
-            _24Htime = 0;
-        }
-        return `${_24Htime.toString().padStart(2, '0')}:${minutes}`;
-    }
-}
-
-
-
 module.exports = {
     add_to_date: add_to_date,
     get_time_difference: get_time_difference,
@@ -205,5 +185,4 @@ module.exports = {
     create_est_with_time: create_est_with_time,
     isOverAYearFromDate: isOverAYearFromDate,
     modifyDateFormat: modifyDateFormat,
-    convertFrom12HformatTo24Hformat: convertFrom12HformatTo24Hformat
 }

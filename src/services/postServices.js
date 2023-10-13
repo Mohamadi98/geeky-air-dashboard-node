@@ -110,32 +110,39 @@ const seacrh_by_date = async (dateTime) => {
     }
 }
 
-const getPostInTimeSpan = async (startDate, endDate) => {
+const getPostsByDateAndType = async (startDate, endDate) => {
     try {
+        console.log('we are at getPostsByDateAndType');
         const posts = await post_agent.findAll({
-            where: post_agent.sequelize.literal(
-                `ARRAY(SELECT date_trunc('day', unnest("dates")) FROM "post") 
-                BETWEEN '${startDate}' AND '${endDate}'`
-            )
-        });
-        if (posts.length > 0) {
-            return {
-                status: 'success',
-                data: posts
-            }
-        }
-        else if (posts.length === 0) {
-            return {
-                status: 'success',
-                data: []
-            }
-        }
+            where: {
+                [Op.or]: [
+                    post_agent.sequelize.literal(`
+                        EXISTS (
+                            SELECT 1
+                            FROM unnest("dates") AS date
+                            WHERE date_trunc('day', date) BETWEEN '${startDate}' AND '${endDate}'
+                        ) AND "type" != 'publish'`
+                    ),
 
+                    post_agent.sequelize.literal(`
+                        EXISTS (
+                            SELECT 1
+                            FROM "post"
+                            WHERE date_trunc('day', "updated_at") BETWEEN '${startDate}' AND '${endDate}'
+                            AND "type" = 'publish')`
+                    )
+                ]
+            }
+        });
+        return {
+            status: 'success',
+            data: posts
+        };
     } catch (error) {
         return {
-            status: 'error',
-            message: `error while executing search within a date span: ${error}`
-        }
+            status: 'failed',
+            message: `Error fetching posts: ${error}`
+        };
     }
 }
 
@@ -242,6 +249,35 @@ const delete_by_id = async (id) => {
     }
 }
 
+const deleteMultiplePosts = async (ids) => {
+    try {
+        const result = await post_agent.destroy({
+            where: {
+                id: {
+                    [Op.in]: ids
+                }
+            }
+        });
+        if (result > 0) {
+            return {
+                status: 'success',
+                message: 'posts deleted successfuly!'
+            }
+        }
+        else if (result === 0) {
+            return {
+                status: 'success',
+                message: 'No rows found matching the IDs'
+            }
+        }
+    } catch (error) {
+        return {
+            status: 'failed',
+            message: `error deleting posts: ${error}`
+        }
+    }
+};
+
 
 module.exports = {
     create: create,
@@ -253,5 +289,6 @@ module.exports = {
     fetch_filter_posts: fetch_filter_posts,
     fetch_filter_post_by_id: fetch_filter_post_by_id,
     delete_by_id: delete_by_id,
-    getPostInTimeSpan: getPostInTimeSpan
+    getPostsByDateAndType: getPostsByDateAndType,
+    deleteMultiplePosts: deleteMultiplePosts
 }

@@ -14,7 +14,7 @@ const postRouter = express.Router();
 const add_post = async (req, res) => {
     const request_data = req.body;
     if (request_data['business_id'] === undefined) {
-        res.status(400).json({
+        return res.status(400).json({
             'message': 'business id is undefined'
         });
     }
@@ -261,7 +261,7 @@ const update_post = async (req, res) => {
     const request_data = req.body;
     delete request_data['id'];
     if (request_data['business_id'] === undefined) {
-        res.status(400).json({
+        return res.status(400).json({
             'message': 'business id is undefined'
         });
     }
@@ -699,6 +699,21 @@ const delete_post = async (req, res) => {
     }
 }
 
+const delete_multiple_posts = async (req, res) => {
+    const IDs = req.body.IDs;
+    const db_response = await postServices.deleteMultiplePosts(IDs);
+    if (db_response.status === 'success') {
+        res.status(200).json({
+            message: db_response.message
+        });
+    }
+    else {
+        res.status(500).json({
+            error_message: db_response.message
+        });
+    }
+}
+
 postRouter.post('/add-post', middlewares.check_active, add_post)
 postRouter.put('/update-post', middlewares.check_active, update_post)
 postRouter.get('/get-all-posts-website-request/:website_name', get_posts_website_request)
@@ -706,5 +721,6 @@ postRouter.get('/get-post-website_request/:id', get_post_by_id)
 postRouter.post('/get-filtered-posts', get_filtered_posts)
 postRouter.post('/get-filtered-posts/:id', get_filtered_posts_by_id)
 postRouter.delete('/delete-post/:id', middlewares.check_active, delete_post)
+postRouter.delete('/delete-multiple-posts', middlewares.check_active, delete_multiple_posts)
 
 module.exports = postRouter;
