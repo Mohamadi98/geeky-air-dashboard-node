@@ -118,7 +118,7 @@ const add_post = async (req, res) => {
                 recurring_on: request_data['recurring_on'],
                 u_start_date: request_data['u_start_date'],
                 u_end_date: request_data['u_end_date'],
-                u_selected_days: request_data['u_selected_days'],
+                u_selected_days: "",
                 expire_at: endingDate,
             }
             const db_response = await postServices.create(data);
