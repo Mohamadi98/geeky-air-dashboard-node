@@ -287,11 +287,11 @@ const update_post = async (req, res) => {
             dates: [],
             expire_at: "",
             recurring_for: "",
-            recurring_on: "",
+            recurring_on: [],
             recurring_every: "",
             u_start_date: "",
             u_end_date: "",
-            u_selected_days: "",
+            u_selected_days: [],
             u_scheduled_date: "",
             integrations: request_data['integrations'],
         }
@@ -336,11 +336,11 @@ const update_post = async (req, res) => {
             dates: [newDateTime],
             time: request_data['time'],
             recurring_for: "",
-            recurring_for: "",
+            recurring_on: [],
             recurring_every: "",
             u_start_date: "",
             u_end_date: "",
-            u_selected_days: "",
+            u_selected_days: [],
             u_scheduled_date: request_data['u_scheduled_date'],
         }
 
@@ -546,11 +546,11 @@ const update_post = async (req, res) => {
             dates: [newDateTime],
             time: request_data['time'],
             recurring_for: "",
-            recurring_for: "",
+            recurring_on: [],
             recurring_every: "",
             u_start_date: "",
             u_end_date: "",
-            u_selected_days: "",
+            u_selected_days: [],
             u_scheduled_date: request_data['u_scheduled_date'],
         }
 
