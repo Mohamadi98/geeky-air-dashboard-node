@@ -243,20 +243,11 @@ const Mohamadi = async (req, res) => {
 }
 
 const playGround = async (req, res) => {
-    const business_id = 34;
-    const website_name = 'post-your-biz4.vercel.app';
-    const db_response = await postServices.get_posts_by_business_id_website_request(
-        website_name, business_id);
-    if (db_response.status === 'success') {
-        res.status(200).json({
-            data: db_response.data
-        });
-    }
-    else {
-        res.status(500).json({
-            message: db_response.message
-        });
-    }
+    const date = '2024-10-18';
+    const response = dateServices.isOverAYearFromDate(date);
+    res.status(200).json({
+        'response': response
+    });
 }
 
 businessRouter.post('/add-business', admin_active_check.check_active, check_business_creds, add_business)

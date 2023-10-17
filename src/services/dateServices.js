@@ -131,12 +131,15 @@ const get_time_difference = (timestamp) => {
 
 function isOverAYearFromDate(inputDate) {
     const dateToCheck = moment(inputDate, 'YYYY-MM-DD').tz('America/New_York');
+    console.log(dateToCheck);
 
     const currentDate = moment().tz('America/New_York');
+    console.log(currentDate);
 
-    const yearsDiff = currentDate.diff(dateToCheck, 'years');
+    const yearsDiff = dateToCheck.diff(currentDate, 'years');
+    console.log(yearsDiff);
 
-    if (yearsDiff > 1) {
+    if (yearsDiff >= 1) {
         return true;
     }
     else {
