@@ -56,7 +56,8 @@ const postsCronJob = cronJob.schedule('* * * * *', async () => {
         for (const post of posts) {
             if (post.dataValues['type'] === 'scheduled') {
                 const post_data = {
-                    status: 'published'
+                    status: 'published',
+                    type: 'publish'
                 }
                 const post_id = post.dataValues['id'];
                 const db_response = await postServices.update_post(post_data, post_id);
