@@ -763,16 +763,19 @@ const update_published_post = async (req, res) => {
     const db_response = await postServices.update_published_post(postData, id);
     if (db_response.status === 'success') {
         res.status(200).json({
+            status: 'success',
             message: db_response.message
         });
     }
     else if (db_response.status === 'failed') {
         res.status(404).json({
+            status: 'failed',
             message: db_response.message
         });
     }
     else {
         res.status(500).json({
+            status: 'error',
             message: db_response.message
         });
     }
