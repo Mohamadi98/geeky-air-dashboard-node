@@ -61,7 +61,7 @@ const show_all_posts_website_request = async (website_name) => {
     }
 }
 
-const get_posts_by_business_id_website_request = async (website_name, business_id) => {
+const get_posts_by_business_id = async (website_name, business_id) => {
     const db_response = await business_services.posts_permission_checker(business_id, website_name);
     if (db_response.length > 0) {
         const posts = await post_agent.findAll({
@@ -186,6 +186,34 @@ const update_post = async (post_data, id) => {
 
     catch (error) {
         return `there was an error updating the post: ${error}`
+    }
+}
+
+const update_published_post = async (post_data, id) => {
+    try {
+        const [affectedRowsCount, affectedRows] = await post_agent.update(post_data,
+            {
+                where: { 'id': id }
+            }
+        );
+        if (affectedRowsCount > 0) {
+            return {
+                status: 'success',
+                message: 'post updated successfuly!'
+            }
+        }
+        else {
+            return {
+                status: 'failed',
+                message: 'row not found'
+            }
+        }
+    }
+    catch (error) {
+        return {
+            status: 'error',
+            message: `this error occurred: ${error}`
+        }
     }
 }
 
@@ -319,5 +347,6 @@ module.exports = {
     delete_by_id: delete_by_id,
     getPostsByDateAndType: getPostsByDateAndType,
     deleteMultiplePosts: deleteMultiplePosts,
-    get_posts_by_business_id_website_request: get_posts_by_business_id_website_request
+    get_posts_by_business_id: get_posts_by_business_id,
+    update_published_post: update_published_post
 }

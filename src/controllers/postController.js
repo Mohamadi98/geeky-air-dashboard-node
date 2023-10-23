@@ -725,6 +725,60 @@ const get_posts_by_date_and_type = async (req, res) => {
     }
 }
 
+const get_posts_by_business_id_website_request = async (req, res) => {
+    const business_id = req.body.id;
+    const website_name = req.body.website_name;
+    const db_response = await postServices.get_posts_by_business_id(website_name, business_id);
+    if (db_response.status === 'success') {
+        res.status(200).json({
+            'data': db_response.data
+        });
+    }
+    else {
+        res.status(500).json({
+            'message': db_response.message
+        })
+    }
+}
+
+const update_published_post = async (req, res) => {
+    const id = req.params.id;
+    const request_data = req.body;
+
+    if (request_data['images'].length > 0) {
+        request_data['images'] = await S3Services.upload_post_images(request_data['business_id'], request_data['images']);
+    }
+    if (request_data['video'] !== "") {
+        request_data['video'] = await S3Services.upload_post_video(request_data['video'], request_data['business_id']);
+    }
+
+    const postData = {
+        images: request_data['images'],
+        video: request_data['video'],
+        content: request_data['content'],
+        italic: request_data['italic'],
+        bold: request_data['bold']
+    }
+
+    const db_response = await postServices.update_published_post(postData, id);
+    if (db_response.status === 'success') {
+        res.status(200).json({
+            message: db_response.message
+        });
+    }
+    else if (db_response.status === 'failed') {
+        res.status(404).json({
+            message: db_response.message
+        });
+    }
+    else {
+        res.status(500).json({
+            message: db_response.message
+        });
+    }
+
+}
+
 postRouter.post('/add-post', middlewares.check_active, add_post)
 postRouter.put('/update-post', middlewares.check_active, update_post)
 postRouter.get('/get-all-posts-website-request/:website_name', get_posts_website_request)
@@ -734,5 +788,7 @@ postRouter.post('/get-filtered-posts/:id', get_filtered_posts_by_id)
 postRouter.delete('/delete-post/:id', middlewares.check_active, delete_post)
 postRouter.delete('/delete-multiple-posts', middlewares.check_active, delete_multiple_posts)
 postRouter.post('/get-posts-by-date-and-type', get_posts_by_date_and_type)
+postRouter.post('/get-posts-by-businessID', get_posts_by_business_id_website_request)
+postRouter.put('/update-published-post/:id', middlewares.check_active, update_published_post)
 
 module.exports = postRouter;
