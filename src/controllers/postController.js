@@ -729,6 +729,10 @@ const get_posts_by_business_id_website_request = async (req, res) => {
     const business_id = req.body.id;
     const website_name = req.body.website_name;
     const db_response = await postServices.get_posts_by_business_id(website_name, business_id);
+    for (let i = 0; i < db_response.data.length; i++) {
+        const timeDifference = dateServices.get_time_difference(db_response.data[i].dataValues['updated_at']);
+        db_response.data[i].dataValues['postTime'] = timeDifference;
+    }
     if (db_response.status === 'success') {
         res.status(200).json({
             'data': db_response.data
