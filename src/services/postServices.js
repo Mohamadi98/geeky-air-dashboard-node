@@ -369,8 +369,23 @@ const get_updated_at_field = async (id) => {
  */
 const query_powered_update = async (postData, id) => {
     try {
-        postData.images.push('ahmed');
-        postData.images.push('mohamadi');
+        const postData2 = {
+            images: postData.images
+        }
+        const [updatedRecord2] = await post_agent.update(postData2, {
+            where: {
+                id: id
+            }
+        });
+        if (updatedRecord2 > 0) {
+            console.log('images has been updated');
+        }
+        else {
+            return {
+                status: 'failed',
+                message: 'post not found'
+            }
+        }
         const [updatedRecord] = await post_agent.sequelize.query(
             'UPDATE post SET content = :content, updated_at = :updated_at, italic = :italic, bold = :bold, video = :video WHERE id = :id RETURNING *',
             {
@@ -386,17 +401,6 @@ const query_powered_update = async (postData, id) => {
                 type: QueryTypes.UPDATE
             }
         );
-        const postData2 = {
-            images: postData.images
-        }
-        const [updatedRecord2] = await post_agent.update(postData2, {
-            where: {
-                id: id
-            }
-        });
-        if (updatedRecord2 > 0) {
-            console.log('images has been updated');
-        }
         if (updatedRecord) {
             return {
                 status: 'success',
