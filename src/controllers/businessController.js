@@ -38,6 +38,22 @@ const add_business = async (req, res) => {
         "website_name": "post-your-biz3.vercel.app",
         "website_value": true
     },
+    {
+        "website_name": "post-your-biz5.vercel.app",
+        "website_value": true
+    },
+    {
+        "website_name": "post-your-biz7.vercel.app",
+        "website_value": true
+    },
+    {
+        "website_name": "post-your-biz8.vercel.app",
+        "website_value": true
+    },
+    {
+        "website_name": "post-your-biz10.vercel.app",
+        "website_value": true
+    }
     ]
 
     data['websites_posts'] = [{
@@ -56,6 +72,22 @@ const add_business = async (req, res) => {
         "website_name": "post-your-biz3.vercel.app",
         "website_value": true
     },
+    {
+        "website_name": "post-your-biz5.vercel.app",
+        "website_value": true
+    },
+    {
+        "website_name": "post-your-biz7.vercel.app",
+        "website_value": true
+    },
+    {
+        "website_name": "post-your-biz8.vercel.app",
+        "website_value": true
+    },
+    {
+        "website_name": "post-your-biz10.vercel.app",
+        "website_value": true
+    }
     ]
 
     if (data['logo'] === "") {

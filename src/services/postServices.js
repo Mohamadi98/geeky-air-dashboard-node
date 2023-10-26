@@ -1,7 +1,7 @@
 const business_agent = require('../models/businessModel')
 const post_agent = require('../models/postModel')
 const business_services = require('../services/businessServices')
-const { Op, sequelize } = require('sequelize')
+const { Op, QueryTypes } = require('sequelize')
 const dateServices = require('../services/dateServices')
 
 const create = async (data) => {
@@ -225,9 +225,7 @@ const fetch_filter_posts = async (postType) => {
                 attributes: ['name', 'logo'],
                 required: true,
             },
-            where: {
-                type: postType
-            }
+            where: postType
         }
         )
         if (result.length >= 0) {
@@ -281,7 +279,6 @@ const delete_by_id = async (id) => {
                 id: id
             }
         });
-        console.log(result);
         if (result > 0) {
             return {
                 status: 'success',
@@ -334,6 +331,91 @@ const deleteMultiplePosts = async (ids) => {
     }
 };
 
+const get_updated_at_field = async (id) => {
+    try {
+        const created_at = await post_agent.findOne({
+            where: {
+                id: id
+            },
+            attributes: ['updated_at']
+        });
+        if (created_at) {
+            return {
+                status: 'success',
+                data: created_at
+            }
+        }
+        else {
+            return {
+                status: 'failed',
+                message: 'post not found'
+            }
+        }
+    } catch (error) {
+        return {
+            status: 'error',
+            message: `there was an error: ${error}`
+        }
+    }
+}
+
+/**
+ * 
+ * this function was created to use a direct sql command to update a published post while retaining
+ * the same updated_at field value from before the execution of the command
+ * there was an issue updating the images field of type array using this command
+ * the solution is to use the sequelize function update() to only update the images field as a temp 
+ * solution
+ */
+const query_powered_update = async (postData, id) => {
+    try {
+        postData.images.push('ahmed');
+        postData.images.push('mohamadi');
+        const [updatedRecord] = await post_agent.sequelize.query(
+            'UPDATE post SET content = :content, updated_at = :updated_at, italic = :italic, bold = :bold, video = :video WHERE id = :id RETURNING *',
+            {
+                replacements: {
+                    images: postData.images,
+                    video: postData.video,
+                    content: postData.content,
+                    italic: postData.italic,
+                    bold: postData.bold,
+                    updated_at: postData.updated_at,
+                    id: id,
+                },
+                type: QueryTypes.UPDATE
+            }
+        );
+        const postData2 = {
+            images: postData.images
+        }
+        const [updatedRecord2] = await post_agent.update(postData2, {
+            where: {
+                id: id
+            }
+        });
+        if (updatedRecord2 > 0) {
+            console.log('images has been updated');
+        }
+        if (updatedRecord) {
+            return {
+                status: 'success',
+                message: 'post updated successfuly!'
+            }
+        }
+        else {
+            return {
+                status: 'failed',
+                message: 'post not found'
+            }
+        }
+    } catch (error) {
+        return {
+            status: 'error',
+            message: `this error occurred: ${error}`
+        }
+    }
+}
 
 module.exports = {
     create: create,
@@ -348,5 +430,7 @@ module.exports = {
     getPostsByDateAndType: getPostsByDateAndType,
     deleteMultiplePosts: deleteMultiplePosts,
     get_posts_by_business_id: get_posts_by_business_id,
-    update_published_post: update_published_post
+    update_published_post: update_published_post,
+    get_updated_at_field: get_updated_at_field,
+    query_powered_update: query_powered_update
 }

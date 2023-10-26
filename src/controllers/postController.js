@@ -425,7 +425,6 @@ const update_post = async (req, res) => {
                     time);
             const dates = recurringServices.createRecurringDatesByMonth(daysOfTheMonth,
                 everyMonth, endingDate, time);
-            console.log(dates);
 
             const data = {
                 business_id: request_data['business_id'],
@@ -756,15 +755,28 @@ const update_published_post = async (req, res) => {
         request_data['video'] = await S3Services.upload_post_video(request_data['video'], request_data['business_id']);
     }
 
+    const updated_at = await postServices.get_updated_at_field(id);
+    if (updated_at.status === 'failed') {
+        return res.status(404).json({
+            message: created_at.message
+        });
+    }
+    else if (updated_at.status === 'error') {
+        return res.status(500).json({
+            message: updated_at.message
+        });
+    }
+
     const postData = {
         images: request_data['images'],
         video: request_data['video'],
         content: request_data['content'],
         italic: request_data['italic'],
-        bold: request_data['bold']
+        bold: request_data['bold'],
+        updated_at: updated_at.data.dataValues['updated_at']
     }
 
-    const db_response = await postServices.update_published_post(postData, id);
+    const db_response = await postServices.query_powered_update(postData, id);
     if (db_response.status === 'success') {
         res.status(200).json({
             status: 'success',
@@ -783,7 +795,6 @@ const update_published_post = async (req, res) => {
             message: db_response.message
         });
     }
-
 }
 
 postRouter.post('/add-post', middlewares.check_active, add_post)
