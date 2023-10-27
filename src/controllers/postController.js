@@ -469,12 +469,13 @@ const update_post = async (req, res) => {
             }
         }
         else if (request_data['recurring_for'] === 'Year') {
-            const yearDates = request_data['start_date'];
+            const yearDates = request_data['selected_days'];
             const dates = [];
             for (const date of yearDates) {
                 dates.push(dateServices.create_est_with_date_and_time(
                     date, time));
             }
+            console.log(dates[0]);
 
             const data = {
                 business_id: request_data['business_id'],
