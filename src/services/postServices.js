@@ -225,7 +225,9 @@ const fetch_filter_posts = async (postType) => {
                 attributes: ['name', 'logo'],
                 required: true,
             },
-            where: postType
+            where: {
+                type: postType
+            }
         }
         )
         if (result.length >= 0) {

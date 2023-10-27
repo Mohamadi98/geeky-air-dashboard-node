@@ -766,7 +766,6 @@ const update_published_post = async (req, res) => {
             message: updated_at.message
         });
     }
-    console.log(updated_at.data.dataValues['updated_at']);
 
     const postData = {
         images: request_data['images'],
