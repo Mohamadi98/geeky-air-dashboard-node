@@ -625,8 +625,11 @@ const get_filtered_posts = async (req, res) => {
         for (let i = 0; i < db_response.data.length; i++) {
             const created_at = db_response.data[i].dataValues['updated_at'];
             const created_at_est = moment(created_at).tz('America/New_York');
-            const formattedDate = dateServices.modifyDateFormat(created_at_est);
-            db_response.data[i].dataValues['publishTime'] = formattedDate;
+            const hour = created_at_est.hour();
+            const minute = created_at_est.minute();
+            const date = new Date(created_at_est).toDateString();
+            const convertedTime = dateServices.convertTime(`${hour}:${minute}`);
+            db_response.data[i].dataValues['publishTime'] = `${date} at ${convertedTime}`
         }
     }
     if (db_response.status === 'success') {
@@ -653,19 +656,22 @@ const get_filtered_posts_by_id = async (req, res) => {
         for (let i = 0; i < db_response.data.length; i++) {
             const created_at = db_response.data[i].dataValues['updated_at'];
             const created_at_est = moment(created_at).tz('America/New_York');
-            const formattedDate = dateServices.modifyDateFormat(created_at_est);
-            db_response.data[i].dataValues['publishTime'] = formattedDate;
+            const hour = created_at_est.hour();
+            const minute = created_at_est.minute();
+            const date = new Date(created_at_est).toDateString();
+            const convertedTime = dateServices.convertTime(`${hour}:${minute}`);
+            db_response.data[i].dataValues['publishTime'] = `${date} at ${convertedTime}`
         }
-    }
-    if (db_response.status === 'success') {
-        res.status(200).json({
-            'data': db_response.data
-        });
-    }
-    else {
-        res.status(500).json({
-            'message': db_response.message
-        });
+        }
+        if (db_response.status === 'success') {
+            res.status(200).json({
+                'data': db_response.data
+            });
+        }
+        else {
+            res.status(500).json({
+                'message': db_response.message
+            });
     }
 }
 

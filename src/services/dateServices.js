@@ -101,6 +101,15 @@ const modifyDateFormat = (date) => {
     return formattedDate
 }
 
+const convertTime = (time) => {
+    const hours = parseInt(time.split(":")[0]);
+    const minutes = parseInt(time.split(":")[1]);
+    const ampm = hours >= 12 ? "PM" : "AM";
+    const convertedHours = (hours % 12 || 12).toString().padStart(2, "0");
+    const convertedMinutes = minutes.toString().padStart(2, "0");
+    return `${convertedHours}:${convertedMinutes} ${ampm}`;
+  };
+
 module.exports = {
     add_to_date: add_to_date,
     get_time_difference: get_time_difference,
@@ -109,4 +118,5 @@ module.exports = {
     create_est_with_time: create_est_with_time,
     isOverAYearFromDate: isOverAYearFromDate,
     modifyDateFormat: modifyDateFormat,
+    convertTime: convertTime
 }
