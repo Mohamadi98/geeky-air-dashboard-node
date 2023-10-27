@@ -51,6 +51,10 @@ const add_business = async (req, res) => {
         "website_value": true
     },
     {
+        "website_name": "post-your-biz9.vercel.app",
+        "website_value": true
+    },
+    {
         "website_name": "post-your-biz10.vercel.app",
         "website_value": true
     }
@@ -82,6 +86,10 @@ const add_business = async (req, res) => {
     },
     {
         "website_name": "post-your-biz8.vercel.app",
+        "website_value": true
+    },
+    {
+        "website_name": "post-your-biz9.vercel.app",
         "website_value": true
     },
     {
