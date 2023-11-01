@@ -135,6 +135,6 @@ const postsCronJob = cronJob.schedule('* * * * *', async () => {
 // });
 
 module.exports = {
-    postsCronJob: postsCronJob,
-    expireSoonCronJob: expireSoonCronJob
+    postsCronJob: postsCronJob
+    // expireSoonCronJob: expireSoonCronJob
   }
