@@ -2,6 +2,8 @@ const cronJob = require('node-cron')
 const businessServices = require('../services/businessServices')
 const postServices = require('../services/postServices')
 const dateServices = require('../services/dateServices')
+const postAgent = require('../models/postModel')
+const {Op} = require('sequelize')
 const moment = require('moment-timezone')
 
 // const job0 = cronJob.schedule('0 0 * * *', async () => {
@@ -92,7 +94,47 @@ const postsCronJob = cronJob.schedule('* * * * *', async () => {
     }
     console.log('Cron Job Finished Executing');
 });
-//
+
+// const expireSoonCronJob = cronJob.schedule('33 19 * * *', async () => {
+//     console.log('Expire Soon Cron Job Started');
+//     try {
+//         const posts = await postAgent.findAll({
+//             where: {
+//                 type: 'recurring',
+//                 expired: {
+//                     [Op.not]: true
+//                 }
+//             }
+//         });
+//         if (posts.length > 0) {
+//             for (const post of posts) {
+//                 if (post.dataValues['days_until_expiration'] === 0) {
+//                     post.expired = true;
+//                     await post.save();
+//                     console.log(`post with id: ${post.id} has expired`);
+//                 }
+//                 else if (post.dataValues['days_until_expiration'] > 0) {
+//                     post.days_until_expiration -= 1;
+//                     await post.save();
+//                     console.log(`post with id: ${post.id} expiry reduced by a day`);
+//                 }
+//                 else {
+//                     console.log('null value for days_until_expiration field');
+//                 }
+//             }
+//         }
+//         else {
+//             console.log('Cron Job Finished - No Results Found');
+//         }
+//     } catch (error) {
+//         console.error('Error executing cronJob0:', error);
+//     }
+//     console.log('Expire Soon Cron JOb Finished Executing');
+// }, {
+//     timezone: 'Africa/Cairo'
+// });
+
 module.exports = {
-    postsCronJob: postsCronJob
+    postsCronJob: postsCronJob,
+    expireSoonCronJob: expireSoonCronJob
   }

@@ -114,14 +114,8 @@ const days_until_expiration = (date) => {
 
   const currentDate = moment().tz('America/New_york');
   date = moment(date).tz('America/New_york');
-  console.log('date in est');
-  console.log(currentDate);
-  console.log('date in utc');
-  console.log(date);
 
   const daysDifference = date.diff(currentDate, 'days');
-  console.log('difference in days');
-  console.log(daysDifference);
 
   return daysDifference;
 }
