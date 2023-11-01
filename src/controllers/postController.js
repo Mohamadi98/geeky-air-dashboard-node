@@ -88,6 +88,12 @@ const add_post = async (req, res) => {
         }
     }
     else if (request_data['type'] === 'recurring') {
+        const days_until_expiration = dateServices.days_until_expiration(request_data['end_date']);
+        if (days_until_expiration < 0) {
+            return res.status(400).json({
+                message: 'all end dates must be current or in the future'
+            });
+        } 
         if (request_data['recurring_for'] === 'Week') {
             const daysOfTheWeek = dateServices.convert_days_arr_to_num_arr(request_data['recurring_on']);
             const everyWeek = request_data['recurring_every'];
@@ -120,6 +126,7 @@ const add_post = async (req, res) => {
                 u_end_date: request_data['u_end_date'],
                 u_selected_days: [],
                 expire_at: endingDate,
+                days_until_expiration: days_until_expiration
             }
             const db_response = await postServices.create(data);
             if (db_response.id) {
@@ -160,6 +167,7 @@ const add_post = async (req, res) => {
                 u_end_date: request_data['u_end_date'],
                 u_selected_days: request_data['u_selected_days'],
                 expire_at: endingDate,
+                days_until_expiration: days_until_expiration
             }
             const db_response = await postServices.create(data);
             if (db_response.id) {
@@ -198,6 +206,7 @@ const add_post = async (req, res) => {
                 u_end_date: request_data['u_end_date'],
                 u_selected_days: request_data['u_start_date'],
                 dates: dates,
+                days_until_expiration: days_until_expiration
             }
 
             const db_response = await postServices.create(data);

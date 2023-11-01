@@ -75,6 +75,12 @@ const post_agent = db_client.define('post', {
       },
       expire_at: {
         type: DataTypes.DATE
+      },
+      days_until_expiration: {
+        type: DataTypes.INTEGER
+      },
+      expired: {
+        type: DataTypes.BOOLEAN
       }
 }, {
     timestamps: true,

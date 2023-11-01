@@ -108,7 +108,23 @@ const convertTime = (time) => {
     const convertedHours = (hours % 12 || 12).toString().padStart(2, "0");
     const convertedMinutes = minutes.toString().padStart(2, "0");
     return `${convertedHours}:${convertedMinutes} ${ampm}`;
-  };
+};
+
+const days_until_expiration = (date) => {
+
+  const currentDate = moment().tz('America/New_york');
+  date = moment(date).tz('America/New_york');
+  console.log('date in est');
+  console.log(currentDate);
+  console.log('date in utc');
+  console.log(date);
+
+  const daysDifference = date.diff(currentDate, 'days');
+  console.log('difference in days');
+  console.log(daysDifference);
+
+  return daysDifference;
+}
 
 module.exports = {
     add_to_date: add_to_date,
@@ -118,5 +134,6 @@ module.exports = {
     create_est_with_time: create_est_with_time,
     isOverAYearFromDate: isOverAYearFromDate,
     modifyDateFormat: modifyDateFormat,
-    convertTime: convertTime
+    convertTime: convertTime,
+    days_until_expiration: days_until_expiration
 }

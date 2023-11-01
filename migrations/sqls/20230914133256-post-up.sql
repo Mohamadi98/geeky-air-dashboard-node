@@ -22,5 +22,7 @@ u_start_date VARCHAR(100),
 u_end_date VARCHAR(100),
 u_selected_days TEXT[],
 u_scheduled_date VARCHAR(100)
-expire_at DATE
+expire_at DATE,
+days_until_expiration INT,
+expired BOOLEAN
 );
